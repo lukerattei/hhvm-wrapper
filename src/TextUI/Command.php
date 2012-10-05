@@ -49,6 +49,7 @@ namespace SebastianBergmann\HPHPA\TextUI
     use SebastianBergmann\HPHPA\Ruleset;
     use SebastianBergmann\HPHPA\Report\Checkstyle;
     use SebastianBergmann\HPHPA\Report\Text;
+    use SebastianBergmann\HPHPA\Version;
 
     /**
      * TextUI frontend.
@@ -56,7 +57,6 @@ namespace SebastianBergmann\HPHPA\TextUI
      * @author    Sebastian Bergmann <sb@sebastian-bergmann.de>
      * @copyright 2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
      * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @version   Release: @package_version@
      * @link      http://github.com/sebastianbergmann/hphpa/tree
      * @since     Class available since Release 1.0.0
      */
@@ -293,7 +293,9 @@ EOT;
          */
         protected function printVersionString()
         {
-            print "hphpa @package_version@ by Sebastian Bergmann.\n\n";
+            printf(
+              "hphpa %s by Sebastian Bergmann.\n\n", Version::id()
+            );
         }
 
         /**

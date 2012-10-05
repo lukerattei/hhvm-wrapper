@@ -38,61 +38,43 @@
  * @author    Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @copyright 2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @since     File available since Release 1.0.0
+ * @since     File available since Release 1.2.3
  */
 
-namespace SebastianBergmann\HPHPA\Report
+namespace SebastianBergmann\HPHPA
 {
-    use SebastianBergmann\HPHPA\Result;
-
-    /**
-     * Writes violations in Checkstyle XML format to a file.
-     *
-     * @author    Sebastian Bergmann <sb@sebastian-bergmann.de>
-     * @copyright 2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
-     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @link      http://github.com/sebastianbergmann/hphpa/tree
-     * @since     Class available since Release 1.0.0
-     */
-    class Checkstyle
+    class Version
     {
+        const VERSION = '1.2.2';
+        protected static $version;
+
         /**
-         * @param Result $result
-         * @param string $filename
+         * @return string
          */
-        public function generate(Result $result, $filename)
+        public static function id()
         {
-            $out = new \XMLWriter;
-            $out->openURI($filename);
-            $out->setIndent(TRUE);
-            $out->startDocument('1.0', 'UTF-8');
-            $out->startElement('checkstyle');
+            if (self::$version === NULL) {
+                self::$version = self::VERSION;
 
-            foreach ($result->getViolations() as $file => $lines) {
-                $out->startElement('file');
-                $out->writeAttribute('name', $file);
+                if (is_dir(dirname(__DIR__) . '/.git')) {
+                    $dir = getcwd();
+                    chdir(__DIR__);
+                    $version = exec('git describe --tags');
+                    chdir($dir);
 
-                foreach ($lines as $line => $violations) {
-                    foreach ($violations as $violation) {
-                        $out->startElement('error');
+                    if ($version) {
+                        if (count(explode('.', self::VERSION)) == 3) {
+                            self::$version = $version;
+                        } else {
+                            $version = explode('-', $version);
 
-                        $out->writeAttribute('line', $line);
-                        $out->writeAttribute('message', $violation['message']);
-                        $out->writeAttribute('severity', 'error');
-                        $out->writeAttribute(
-                          'source',
-                          'HipHop.PHP.Analysis.' . $violation['source']
-                        );
-
-                        $out->endElement();
+                            self::$version = self::VERSION . '-' . $version[2];
+                        }
                     }
                 }
-
-                $out->endElement();
             }
 
-            $out->endElement();
-            $out->flush();
+            return self::$version;
         }
     }
 }

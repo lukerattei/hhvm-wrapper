@@ -56,7 +56,8 @@ function hphpa_autoload($class) {
           'sebastianbergmann\\hphpa\\report\\text' => '/Report/Text.php',
           'sebastianbergmann\\hphpa\\result' => '/Result.php',
           'sebastianbergmann\\hphpa\\ruleset' => '/Ruleset.php',
-          'sebastianbergmann\\hphpa\\textui\\command' => '/TextUI/Command.php'
+          'sebastianbergmann\\hphpa\\textui\\command' => '/TextUI/Command.php',
+          'sebastianbergmann\\hphpa\\version' => '/Version.php'
         );
 
         $path = dirname(__FILE__);
