@@ -3,6 +3,11 @@ hphpa 1.2
 
 This is the list of changes for the hphpa 1.2 release series.
 
+hphpa 1.2.2
+-----------
+
+* Updated for HHVM (which is now required).
+
 hphpa 1.2.1
 -----------
 
