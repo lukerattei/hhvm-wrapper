@@ -42,6 +42,7 @@
  */
 
 require_once 'SebastianBergmann/FinderFacade/autoload.php';
+require_once 'SebastianBergmann/Version/autoload.php';
 require_once 'TheSeer/fDOMDocument/autoload.php';
 require_once 'ezc/Base/base.php';
 
@@ -56,8 +57,7 @@ function hphpa_autoload($class) {
           'sebastianbergmann\\hphpa\\report\\text' => '/Report/Text.php',
           'sebastianbergmann\\hphpa\\result' => '/Result.php',
           'sebastianbergmann\\hphpa\\ruleset' => '/Ruleset.php',
-          'sebastianbergmann\\hphpa\\textui\\command' => '/TextUI/Command.php',
-          'sebastianbergmann\\hphpa\\version' => '/Version.php'
+          'sebastianbergmann\\hphpa\\textui\\command' => '/TextUI/Command.php'
         );
 
         $path = dirname(__FILE__);

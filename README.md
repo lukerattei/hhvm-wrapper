@@ -1,10 +1,8 @@
-hphpa
-=====
+# hphpa
 
 **hphpa** is a convenience wrapper for [HipHop](http://github.com/facebook/hiphop-php/)'s static analyzer.
 
-Installation
-------------
+## Installation
 
 `hphpa` should be installed using the PEAR Installer, the backbone of the [PHP Extension and Application Repository](http://pear.php.net/) that provides a distribution system for PHP packages.
 
@@ -17,11 +15,10 @@ The following two commands (which you may have to run as `root`) are all that is
 
 After the installation you can find the `hphpa` source files inside your local PEAR directory; the path is usually `/usr/lib/php/SebastianBergmann/HPHPA`.
 
-Usage Example
--------------
+## Usage Example
 
     ➜  ~  hphpa --checkstyle hphpa.xml /usr/local/src/code-coverage/PHP
-    hphpa 1.1.0 by Sebastian Bergmann.
+    hphpa 1.3.0 by Sebastian Bergmann.
 
     Using ruleset /usr/share/pear/data/hphpa/ruleset.xml
 

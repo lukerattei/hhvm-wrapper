@@ -44,12 +44,12 @@
 namespace SebastianBergmann\HPHPA\TextUI
 {
     use SebastianBergmann\FinderFacade\FinderFacade;
+    use SebastianBergmann\Version;
     use SebastianBergmann\HPHPA\Analyzer;
     use SebastianBergmann\HPHPA\Result;
     use SebastianBergmann\HPHPA\Ruleset;
     use SebastianBergmann\HPHPA\Report\Checkstyle;
     use SebastianBergmann\HPHPA\Report\Text;
-    use SebastianBergmann\HPHPA\Version;
 
     /**
      * TextUI frontend.
@@ -62,6 +62,14 @@ namespace SebastianBergmann\HPHPA\TextUI
      */
     class Command
     {
+        private $version;
+
+        public function __construct()
+        {
+            $version = new Version('1.3', __DIR__);
+            $this->version = $version->getVersion();
+        }
+
         /**
          * Main method.
          */
@@ -125,6 +133,16 @@ namespace SebastianBergmann\HPHPA\TextUI
             $input->registerOption(
               new \ezcConsoleOption(
                 '',
+                'names-exclude',
+                \ezcConsoleInput::TYPE_STRING,
+                '',
+                FALSE
+               )
+            );
+
+            $input->registerOption(
+              new \ezcConsoleOption(
+                '',
                 'quiet',
                 \ezcConsoleInput::TYPE_NONE,
                 NULL,
@@ -175,17 +193,19 @@ namespace SebastianBergmann\HPHPA\TextUI
                 exit(1);
             }
 
-            $checkstyle  = $input->getOption('checkstyle')->value;
-            $excludes    = $input->getOption('exclude')->value;
-            $rulesetFile = $input->getOption('ruleset')->value;
-            $names       = explode(',', $input->getOption('names')->value);
-            $quiet       = $input->getOption('quiet')->value;
+            $checkstyle   = $input->getOption('checkstyle')->value;
+            $excludes     = $input->getOption('exclude')->value;
+            $rulesetFile  = $input->getOption('ruleset')->value;
+            $names        = explode(',', $input->getOption('names')->value);
+            $namesExclude = explode(',', $input->getOption('names-exclude')->value);
+            $quiet        = $input->getOption('quiet')->value;
 
             array_map('trim', $names);
+            array_map('trim', $namesExclude);
 
             $this->printVersionString();
 
-            $finder = new FinderFacade($arguments, $excludes, $names);
+            $finder = new FinderFacade($arguments, $excludes, $names, $namesExclude);
             $files  = $finder->findFiles();
 
             if (!$rulesetFile) {
@@ -294,7 +314,7 @@ EOT;
         protected function printVersionString()
         {
             printf(
-              "hphpa %s by Sebastian Bergmann.\n\n", Version::id()
+              "hphpa %s by Sebastian Bergmann.\n\n", $this->version
             );
         }
 

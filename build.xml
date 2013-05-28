@@ -184,9 +184,9 @@
    <fileset dir="${basedir}/src"/>
   </copy>
 
-  <copy file="ChangeLog.markdown" todir="${basedir}/build"/>
+  <copy file="ChangeLog.md" todir="${basedir}/build"/>
   <copy file="LICENSE" todir="${basedir}/build"/>
-  <copy file="README.markdown" todir="${basedir}/build"/>
+  <copy file="README.md" todir="${basedir}/build"/>
   <copy file="hphpa.php" todir="${basedir}/build"/>
   <copy file="ruleset.xml" todir="${basedir}/build"/>
 
@@ -195,9 +195,9 @@
   </exec>
 
   <delete dir="${basedir}/build/SebastianBergmann"/>
-  <delete file="${basedir}/build/ChangeLog.markdown"/>
+  <delete file="${basedir}/build/ChangeLog.md"/>
   <delete file="${basedir}/build/LICENSE"/>
-  <delete file="${basedir}/build/README.markdown"/>
+  <delete file="${basedir}/build/README.md"/>
   <delete file="${basedir}/build/hphpa.php"/>
   <delete file="${basedir}/build/ruleset.xml"/>
  </target>
