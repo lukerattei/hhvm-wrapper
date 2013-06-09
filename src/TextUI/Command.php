@@ -221,7 +221,7 @@ namespace SebastianBergmann\HPHPA\TextUI
                 $this->showError('Could not read ruleset.');
             }
 
-            printf("Using ruleset %s\n\n", realpath($rulesetFile));
+            printf("Using ruleset %s\n\n", $rulesetFile);
 
             $analyzer = new Analyzer;
             $result   = new Result;
@@ -324,11 +324,19 @@ EOT;
          */
         protected function getDefaultRulesetFile()
         {
-            if (strpos('@data_dir@', '@data_dir') === 0) {
-                return dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'ruleset.xml';
+            if (defined('__HPHPA_PHAR__')) {
+                return 'phar://' . basename(__HPHPA_PHAR__) . '/ruleset.xml';
             }
 
-            return'@data_dir@' . DIRECTORY_SEPARATOR . 'hphpa' . DIRECTORY_SEPARATOR . 'ruleset.xml';
+            else if (strpos('@data_dir@', '@data_dir') === 0) {
+                return realpath(
+                  dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'ruleset.xml'
+                );
+            }
+
+            return realpath(
+              '@data_dir@' . DIRECTORY_SEPARATOR . 'hphpa' . DIRECTORY_SEPARATOR . 'ruleset.xml'
+            );
         }
     }
 }

@@ -29,6 +29,7 @@
   <delete dir="${basedir}/build/coverage"/>
   <delete dir="${basedir}/build/logs"/>
   <delete dir="${basedir}/build/pdepend"/>
+  <delete dir="${basedir}/build/phar"/>
   <delete dir="${basedir}/build/phpdox"/>
   <delete dir="${basedir}/build/SebastianBergmann"/>
   <delete file="${basedir}/build/ChangeLog.markdown"/>
@@ -37,7 +38,8 @@
   <delete file="${basedir}/build/hphpa.php"/>
   <delete file="${basedir}/build/ruleset.xml"/>
   <delete>
-   <fileset dir="${basedir}/build" includes="**/*.tgz"/>
+   <fileset dir="${basedir}/build" includes="*.phar"/>
+   <fileset dir="${basedir}/build" includes="*.tgz"/>
   </delete>
  </target>
 
@@ -200,5 +202,62 @@
   <delete file="${basedir}/build/README.md"/>
   <delete file="${basedir}/build/hphpa.php"/>
   <delete file="${basedir}/build/ruleset.xml"/>
+ </target>
+
+ <target name="phar"
+         description="Create PHAR archive of HPHPA and all its dependencies"
+         depends="clean">
+  <mkdir dir="${basedir}/build/phar"/>
+
+  <exec executable="bash" outputproperty="version">
+   <arg value="-c" />
+   <arg value="${basedir}/hphpa.php --version | awk 'BEGIN { ORS = &quot;&quot;; } {print $2}'" />
+  </exec>
+
+  <untar dest="${basedir}/build/phar" compression="gzip">
+   <fileset dir="${basedir}/build/dependencies">
+    <include name="**/*.tgz"/>
+   </fileset>
+  </untar>
+
+  <copy todir="${basedir}/build/phar/HPHPA">
+   <fileset dir="${basedir}/src"/>
+  </copy>
+
+  <copy todir="${basedir}/build/phar" file="${basedir}/ruleset.xml"/>
+
+  <delete>
+   <fileset dir="${basedir}/build/phar">
+    <include name="**/autoload.php" />
+    <include name="**/Autoload.php" />
+    <include name="**/Autoload.php.in" />
+    <include name="**/package.sig" />
+    <include name="**/package.xml" />
+   </fileset>
+  </delete>
+
+  <exec executable="phpab">
+   <arg value="--all" />
+   <arg value="--phar" />
+   <arg value="--output" />
+   <arg path="${basedir}/build/hphpa-${version}.phar" />
+   <arg value="--template" />
+   <arg path="${basedir}/build/phar-autoload.php.in" />
+   <arg value="--indent" />
+   <arg value="            " />
+   <arg path="${basedir}/build/phar" />
+  </exec>
+
+  <chmod file="${basedir}/build/hphpa-${version}.phar" perm="ugo+rx"/>
+  <copy file="${basedir}/build/hphpa-${version}.phar" tofile="${basedir}/build/hphpa-${version}-compressed.phar"/>
+  <chmod file="${basedir}/build/hphpa-${version}-compressed.phar" perm="ugo+rx"/>
+
+  <exec executable="phar">
+   <arg value="compress" />
+   <arg value="-f" />
+   <arg path="${basedir}/build/hphpa-${version}-compressed.phar" />
+   <arg value="-c" />
+   <arg value="bzip2" />
+  </exec>
  </target>
 </project>
