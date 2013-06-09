@@ -66,7 +66,7 @@ namespace SebastianBergmann\HPHPA\TextUI
 
         public function __construct()
         {
-            $version = new Version('1.3', __DIR__);
+            $version = new Version('1.3.0', __DIR__);
             $this->version = $version->getVersion();
         }
 
