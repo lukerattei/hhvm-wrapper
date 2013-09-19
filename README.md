@@ -4,9 +4,18 @@
 
 ## Installation
 
-There are two supported ways of installing HPHPA.
+### PHP Archive (PHAR)
 
-You can use the [PEAR Installer](http://pear.php.net/manual/en/guide.users.commandline.cli.php) to download and install HPHPA as well as its dependencies. You can also download a [PHP Archive (PHAR)](http://php.net/phar) of HPHPA that has all required dependencies of HPHPA bundled in a single file.
+The easiest way to obtain HPHPA is to download a [PHP Archive (PHAR)](http://php.net/phar) that has all required dependencies of HPHPA bundled in a single file:
+
+    wget https://phar.phpunit.de/hphpa.phar
+    chmod +x hphpa.phar
+    mv hphpa.phar /usr/local/bin/hphpa
+
+You can also immediately use the PHAR after you have downloaded it, of course:
+
+    wget https://phar.phpunit.de/hphpa.phar
+    php hphpa.phar
 
 ### PEAR Installer
 
@@ -14,11 +23,6 @@ The following two commands (which you may have to run as `root`) are all that is
 
     pear config-set auto_discover 1
     pear install pear.phpunit.de/hphpa
-
-### PHP Archive (PHAR)
-
-    wget http://pear.phpunit.de/get/hphpa.phar
-    chmod +x hphpa.phar
 
 ## Usage Example
 
