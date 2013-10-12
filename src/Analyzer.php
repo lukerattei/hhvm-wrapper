@@ -61,6 +61,8 @@ namespace SebastianBergmann\HPHPA
         public function run(array $files, Result $result)
         {
             $tmpfname = tempnam('/tmp', 'hhvm');
+            $tmpdname = dirname($tmpfname) . DIRECTORY_SEPARATOR;
+
             file_put_contents($tmpfname, join("\n", $files));
 
             shell_exec(
@@ -73,9 +75,9 @@ namespace SebastianBergmann\HPHPA
 
             unlink($tmpfname);
 
-            $codeError = dirname($tmpfname) . DIRECTORY_SEPARATOR . 'CodeError.js';
-            $stats     = dirname($tmpfname) . DIRECTORY_SEPARATOR . 'Stats.js';
-            $program   = dirname($tmpfname) . DIRECTORY_SEPARATOR . 'program';
+            $codeError = $tmpdname . 'CodeError.js';
+            $stats     = $tmpdname . 'Stats.js';
+            $program   = $tmpdname . 'program';
 
             if (!file_exists($codeError)) {
                 throw new \RuntimeException(
