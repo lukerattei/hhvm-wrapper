@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="HPHPA" default="build">
+<project name="hhvm-wrapper" default="build">
  <target name="build" depends="prepare,lint"/>
 
  <target name="clean" description="Cleanup build artifacts">
@@ -8,7 +8,7 @@
   <delete dir="${basedir}/build/SebastianBergmann"/>
   <delete file="${basedir}/build/LICENSE"/>
   <delete file="${basedir}/build/README.md"/>
-  <delete file="${basedir}/build/hphpa.php"/>
+  <delete file="${basedir}/build/hhvm-wrapper.php"/>
   <delete file="${basedir}/build/ruleset.xml"/>
   <delete>
    <fileset dir="${basedir}/build" includes="*.phar"/>
@@ -26,7 +26,7 @@
    <arg value="--template" />
    <arg path="src/autoload.php.in" />
    <arg value="--indent" />
-   <arg value="          " />
+   <arg value="              " />
    <arg path="src" />
   </exec>
  </target>
@@ -49,15 +49,15 @@
  </target>
 
  <target name="pear">
-  <mkdir dir="${basedir}/build/SebastianBergmann/HPHPA"/>
+  <mkdir dir="${basedir}/build/SebastianBergmann/HHVM"/>
 
-  <copy todir="${basedir}/build/SebastianBergmann/HPHPA">
+  <copy todir="${basedir}/build/SebastianBergmann/HHVM">
    <fileset dir="${basedir}/src"/>
   </copy>
 
   <copy file="LICENSE" todir="${basedir}/build"/>
   <copy file="README.md" todir="${basedir}/build"/>
-  <copy file="hphpa.php" todir="${basedir}/build"/>
+  <copy file="hhvm-wrapper.php" todir="${basedir}/build"/>
   <copy file="ruleset.xml" todir="${basedir}/build"/>
 
   <exec executable="pear" dir="${basedir}/build">
@@ -67,12 +67,12 @@
   <delete dir="${basedir}/build/SebastianBergmann"/>
   <delete file="${basedir}/build/LICENSE"/>
   <delete file="${basedir}/build/README.md"/>
-  <delete file="${basedir}/build/hphpa.php"/>
+  <delete file="${basedir}/build/hhvm-wrapper.php"/>
   <delete file="${basedir}/build/ruleset.xml"/>
  </target>
 
  <target name="phar"
-         description="Create PHAR archive of HPHPA and all its dependencies"
+         description="Create PHAR archive of hhvm-wrapper and all its dependencies"
          depends="phar-prepare,phar-build">
  </target>
 
@@ -90,7 +90,7 @@
  <target name="phar-build">
   <exec executable="bash" outputproperty="version">
    <arg value="-c" />
-   <arg value="${basedir}/hphpa.php --version | awk 'BEGIN { ORS = &quot;&quot;; } {print $2}'" />
+   <arg value="${basedir}/hhvm-wrapper.php --version | awk 'BEGIN { ORS = &quot;&quot;; } {print $2}'" />
   </exec>
 
   <copy todir="${basedir}/build/phar/src">
@@ -129,7 +129,7 @@
    <arg value="--all" />
    <arg value="--phar" />
    <arg value="--output" />
-   <arg path="${basedir}/build/hphpa-${version}.phar" />
+   <arg path="${basedir}/build/hhvm-wrapper-${version}.phar" />
    <arg value="--template" />
    <arg path="${basedir}/build/phar-autoload.php.in" />
    <arg value="--indent" />
@@ -137,6 +137,6 @@
    <arg path="${basedir}/build/phar" />
   </exec>
 
-  <chmod file="${basedir}/build/hphpa-${version}.phar" perm="ugo+rx"/>
+  <chmod file="${basedir}/build/hhvm-wrapper-${version}.phar" perm="ugo+rx"/>
  </target>
 </project>

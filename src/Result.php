@@ -41,7 +41,7 @@
  * @since     File available since Release 1.0.0
  */
 
-namespace SebastianBergmann\HPHPA;
+namespace SebastianBergmann\HHVM;
 
 /**
  * Parser for HipHop CodeError.js logfile.

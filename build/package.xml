@@ -31,7 +31,7 @@
  <contents>
   <dir name="/">
    <dir name="SebastianBergmann">
-    <dir name="HPHPA">
+    <dir name="HHVM">
      <dir name="CLI">
       <file baseinstalldir="/" name="Application.php" role="php" />
       <file baseinstalldir="/" name="Command.php" role="php">
@@ -51,7 +51,7 @@
    <file baseinstalldir="/" name="ruleset.xml" role="data"/>
    <file baseinstalldir="/" name="LICENSE" role="doc"/>
    <file baseinstalldir="/" name="README.md" role="doc"/>
-   <file baseinstalldir="/" name="hphpa.php" role="script">
+   <file baseinstalldir="/" name="hhvm-wrapper.php" role="script">
     <tasks:replace from="/usr/bin/env php" to="php_bin" type="pear-config"/>
     <tasks:replace from="@php_bin@" to="php_bin" type="pear-config" />
    </file>
@@ -89,7 +89,7 @@
  </dependencies>
  <phprelease>
   <filelist>
-   <install as="hphpa" name="hphpa.php" />
+   <install as="hhvm-wrapper" name="hhvm-wrapper.php" />
   </filelist>
  </phprelease>
 </package>

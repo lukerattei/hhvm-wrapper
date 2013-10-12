@@ -41,7 +41,7 @@
  * @since     File available since Release 1.1.0
  */
 
-namespace SebastianBergmann\HPHPA;
+namespace SebastianBergmann\HHVM;
 
 use \TheSeer\fDOM\fDOMDocument;
 

@@ -41,7 +41,7 @@
  * @since     File available since Release 2.0.0
  */
 
-namespace SebastianBergmann\HPHPA\CLI;
+namespace SebastianBergmann\HHVM\CLI;
 
 use SebastianBergmann\FinderFacade\FinderFacade;
 use Symfony\Component\Console\Command\Command as AbstractCommand;
@@ -49,11 +49,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use SebastianBergmann\HPHPA\Analyzer;
-use SebastianBergmann\HPHPA\Result;
-use SebastianBergmann\HPHPA\Ruleset;
-use SebastianBergmann\HPHPA\Log\Checkstyle;
-use SebastianBergmann\HPHPA\Log\Text;
+use SebastianBergmann\HHVM\Analyzer;
+use SebastianBergmann\HHVM\Result;
+use SebastianBergmann\HHVM\Ruleset;
+use SebastianBergmann\HHVM\Log\Checkstyle;
+use SebastianBergmann\HHVM\Log\Text;
 
 /**
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
@@ -210,8 +210,8 @@ class AnalyzeCommand extends AbstractCommand
 
     private function getDefaultRulesetFile()
     {
-        if (defined('__HPHPA_PHAR__')) {
-            return 'phar://' . basename(__HPHPA_PHAR__) . '/ruleset.xml';
+        if (defined('__HHVM_PHAR__')) {
+            return 'phar://' . basename(__HHVM_PHAR__) . '/ruleset.xml';
         }
 
         else if (strpos('@data_dir@', '@data_dir') === 0) {

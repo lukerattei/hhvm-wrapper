@@ -41,7 +41,7 @@
  * @since     File available since Release 2.0.0
  */
 
-namespace SebastianBergmann\HPHPA\CLI;
+namespace SebastianBergmann\HHVM\CLI;
 
 use SebastianBergmann\Version;
 use Symfony\Component\Console\Application as AbstractApplication;
@@ -51,7 +51,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
- * TextUI frontend for HPHPA.
+ * TextUI frontend for HHVM.
  *
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>

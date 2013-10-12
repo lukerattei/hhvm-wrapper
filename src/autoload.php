@@ -52,13 +52,13 @@ spl_autoload_register(
 
         if ($classes === null) {
             $classes = array(
-              'sebastianbergmann\\hphpa\\analyzer' => '/Analyzer.php',
-          'sebastianbergmann\\hphpa\\cli\\analyzecommand' => '/CLI/AnalyzeCommand.php',
-          'sebastianbergmann\\hphpa\\cli\\application' => '/CLI/Application.php',
-          'sebastianbergmann\\hphpa\\log\\checkstyle' => '/Log/Checkstyle.php',
-          'sebastianbergmann\\hphpa\\log\\text' => '/Log/Text.php',
-          'sebastianbergmann\\hphpa\\result' => '/Result.php',
-          'sebastianbergmann\\hphpa\\ruleset' => '/Ruleset.php'
+              'sebastianbergmann\\hhvm\\analyzer' => '/Analyzer.php',
+              'sebastianbergmann\\hhvm\\cli\\analyzecommand' => '/CLI/AnalyzeCommand.php',
+              'sebastianbergmann\\hhvm\\cli\\application' => '/CLI/Application.php',
+              'sebastianbergmann\\hhvm\\log\\checkstyle' => '/Log/Checkstyle.php',
+              'sebastianbergmann\\hhvm\\log\\text' => '/Log/Text.php',
+              'sebastianbergmann\\hhvm\\result' => '/Result.php',
+              'sebastianbergmann\\hhvm\\ruleset' => '/Ruleset.php'
             );
         }
 

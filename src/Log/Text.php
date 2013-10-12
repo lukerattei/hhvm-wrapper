@@ -41,9 +41,9 @@
  * @since     File available since Release 2.0.0
  */
 
-namespace SebastianBergmann\HPHPA\Log;
+namespace SebastianBergmann\HHVM\Log;
 
-use SebastianBergmann\HPHPA\Result;
+use SebastianBergmann\HHVM\Result;
 
 /**
  * Writes violations in Checkstyle XML format to a file.

@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-define('__HPHPA_PHAR__', realpath($GLOBALS['_SERVER']['SCRIPT_NAME']));
+define('__HHVM_PHAR__', realpath($GLOBALS['_SERVER']['SCRIPT_NAME']));
 
 spl_autoload_register(
   function ($class)
@@ -23,7 +23,7 @@ spl_autoload_register(
 
 Phar::mapPhar('___PHAR___');
 
-$application = new SebastianBergmann\HPHPA\CLI\Application;
+$application = new SebastianBergmann\HHVM\CLI\Application;
 $application->run();
 
 __HALT_COMPILER();

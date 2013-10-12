@@ -45,8 +45,8 @@
 if (strpos('@php_bin@', '@php_bin') === 0) {
     require __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
 } else {
-    require 'SebastianBergmann/HPHPA/autoload.php';
+    require 'SebastianBergmann/HHVM/autoload.php';
 }
 
-$application = new SebastianBergmann\HPHPA\CLI\Application;
+$application = new SebastianBergmann\HHVM\CLI\Application;
 $application->run();

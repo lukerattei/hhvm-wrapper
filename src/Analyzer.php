@@ -41,7 +41,7 @@
  * @since     File available since Release 1.0.0
  */
 
-namespace SebastianBergmann\HPHPA;
+namespace SebastianBergmann\HHVM;
 
 /**
  * Wrapper for HipHop's static analyzer.
