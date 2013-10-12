@@ -41,58 +41,57 @@
  * @since     File available since Release 2.0.0
  */
 
-namespace SebastianBergmann\HPHPA\Log
+namespace SebastianBergmann\HPHPA\Log;
+
+use SebastianBergmann\HPHPA\Result;
+
+/**
+ * Writes violations in Checkstyle XML format to a file.
+ *
+ * @author    Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ * @link      http://github.com/sebastianbergmann/hphpa/tree
+ * @since     Class available since Release 2.0.0
+ */
+class Checkstyle
 {
-    use SebastianBergmann\HPHPA\Result;
-
     /**
-     * Writes violations in Checkstyle XML format to a file.
-     *
-     * @author    Sebastian Bergmann <sebastian@phpunit.de>
-     * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
-     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @link      http://github.com/sebastianbergmann/hphpa/tree
-     * @since     Class available since Release 2.0.0
+     * @param Result $result
+     * @param string $filename
      */
-    class Checkstyle
+    public function generate(Result $result, $filename)
     {
-        /**
-         * @param Result $result
-         * @param string $filename
-         */
-        public function generate(Result $result, $filename)
-        {
-            $out = new \XMLWriter;
-            $out->openURI($filename);
-            $out->setIndent(TRUE);
-            $out->startDocument('1.0', 'UTF-8');
-            $out->startElement('checkstyle');
+        $out = new \XMLWriter;
+        $out->openURI($filename);
+        $out->setIndent(TRUE);
+        $out->startDocument('1.0', 'UTF-8');
+        $out->startElement('checkstyle');
 
-            foreach ($result->getViolations() as $file => $lines) {
-                $out->startElement('file');
-                $out->writeAttribute('name', $file);
+        foreach ($result->getViolations() as $file => $lines) {
+            $out->startElement('file');
+            $out->writeAttribute('name', $file);
 
-                foreach ($lines as $line => $violations) {
-                    foreach ($violations as $violation) {
-                        $out->startElement('error');
+            foreach ($lines as $line => $violations) {
+                foreach ($violations as $violation) {
+                    $out->startElement('error');
 
-                        $out->writeAttribute('line', $line);
-                        $out->writeAttribute('message', $violation['message']);
-                        $out->writeAttribute('severity', 'error');
-                        $out->writeAttribute(
-                          'source',
-                          'HipHop.PHP.Analysis.' . $violation['source']
-                        );
+                    $out->writeAttribute('line', $line);
+                    $out->writeAttribute('message', $violation['message']);
+                    $out->writeAttribute('severity', 'error');
+                    $out->writeAttribute(
+                      'source',
+                      'HipHop.PHP.Analysis.' . $violation['source']
+                    );
 
-                        $out->endElement();
-                    }
+                    $out->endElement();
                 }
-
-                $out->endElement();
             }
 
             $out->endElement();
-            $out->flush();
         }
+
+        $out->endElement();
+        $out->flush();
     }
 }

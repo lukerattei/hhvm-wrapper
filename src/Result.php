@@ -41,77 +41,76 @@
  * @since     File available since Release 1.0.0
  */
 
-namespace SebastianBergmann\HPHPA
+namespace SebastianBergmann\HPHPA;
+
+/**
+ * Parser for HipHop CodeError.js logfile.
+ *
+ * @author    Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ * @link      http://github.com/sebastianbergmann/hphpa/tree
+ * @since     Class available since Release 1.0.0
+ */
+class Result
 {
     /**
-     * Parser for HipHop CodeError.js logfile.
-     *
-     * @author    Sebastian Bergmann <sebastian@phpunit.de>
-     * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
-     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @link      http://github.com/sebastianbergmann/hphpa/tree
-     * @since     Class available since Release 1.0.0
+     * @var array
      */
-    class Result
+    protected $rules = array();
+
+    /**
+     * @var array
+     */
+    protected $violations = array();
+
+    /**
+     * @return array
+     */
+    public function getViolations()
     {
-        /**
-         * @var array
-         */
-        protected $rules = array();
+        return $this->violations;
+    }
 
-        /**
-         * @var array
-         */
-        protected $violations = array();
+    /**
+     * @param array $rules
+     * @since Method available since Release 1.1.0
+     */
+    public function setRules(array $rules)
+    {
+        $this->rules = $rules;
+    }
 
-        /**
-         * @return array
-         */
-        public function getViolations()
-        {
-            return $this->violations;
-        }
+    /**
+     * @param array $codeError
+     */
+    public function parse(array $codeError)
+    {
+        foreach ($codeError[1] as $rule => $violations) {
+            if (!isset($this->rules[$rule]) || !is_array($violations)) {
+                continue;
+            }
 
-        /**
-         * @param array $rules
-         * @since Method available since Release 1.1.0
-         */
-        public function setRules(array $rules)
-        {
-            $this->rules = $rules;
-        }
+            foreach ($violations as $violation) {
+                $filename = $violation['c1'][0];
+                $line     = $violation['c1'][1];
+                $message  = sprintf(
+                              $this->rules[$rule],
+                              trim($violation['d'])
+                            );
 
-        /**
-         * @param array $codeError
-         */
-        public function parse(array $codeError)
-        {
-            foreach ($codeError[1] as $rule => $violations) {
-                if (!isset($this->rules[$rule]) || !is_array($violations)) {
-                    continue;
+                if (!isset($this->violations[$filename])) {
+                    $this->violations[$filename] = array();
                 }
 
-                foreach ($violations as $violation) {
-                    $filename = $violation['c1'][0];
-                    $line     = $violation['c1'][1];
-                    $message  = sprintf(
-                                  $this->rules[$rule],
-                                  trim($violation['d'])
-                                );
-
-                    if (!isset($this->violations[$filename])) {
-                        $this->violations[$filename] = array();
-                    }
-
-                    if (!isset($this->violations[$filename][$line])) {
-                        $this->violations[$filename][$line] = array();
-                    }
-
-                    $this->violations[$filename][$line][] = array(
-                      'message'  => $message,
-                      'source'   => $rule
-                    );
+                if (!isset($this->violations[$filename][$line])) {
+                    $this->violations[$filename][$line] = array();
                 }
+
+                $this->violations[$filename][$line][] = array(
+                  'message'  => $message,
+                  'source'   => $rule
+                );
             }
         }
     }

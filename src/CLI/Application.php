@@ -41,59 +41,58 @@
  * @since     File available since Release 2.0.0
  */
 
-namespace SebastianBergmann\HPHPA\CLI
+namespace SebastianBergmann\HPHPA\CLI;
+
+use SebastianBergmann\Version;
+use Symfony\Component\Console\Application as AbstractApplication;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\ArrayInput;
+
+/**
+ * TextUI frontend for HPHPA.
+ *
+ * @author    Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ * @link      http://github.com/sebastianbergmann/hphpa/tree
+ * @since     Class available since Release 2.0.0
+ */
+class Application extends AbstractApplication
 {
-    use SebastianBergmann\Version;
-    use Symfony\Component\Console\Application as AbstractApplication;
-    use Symfony\Component\Console\Input\InputInterface;
-    use Symfony\Component\Console\Input\ArgvInput;
-    use Symfony\Component\Console\Output\OutputInterface;
-    use Symfony\Component\Console\Input\ArrayInput;
+    public function __construct()
+    {
+        $version = new Version('2.0-dev', __DIR__);
+        parent::__construct('hphpa', $version->getVersion());
+
+        $this->add(new AnalyzeCommand);
+    }
 
     /**
-     * TextUI frontend for HPHPA.
+     * Runs the current application.
      *
-     * @author    Sebastian Bergmann <sebastian@phpunit.de>
-     * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
-     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @link      http://github.com/sebastianbergmann/hphpa/tree
-     * @since     Class available since Release 2.0.0
+     * @param InputInterface  $input  An Input instance
+     * @param OutputInterface $output An Output instance
+     *
+     * @return integer 0 if everything went fine, or an error code
      */
-    class Application extends AbstractApplication
+    public function doRun(InputInterface $input, OutputInterface $output)
     {
-        public function __construct()
-        {
-            $version = new Version('2.0-dev', __DIR__);
-            parent::__construct('hphpa', $version->getVersion());
-
-            $this->add(new AnalyzeCommand);
+        if (!$input->hasParameterOption('--quiet')) {
+            $output->write(
+                sprintf(
+                    "hphpa %s by Sebastian Bergmann.\n\n",
+                    $this->getVersion()
+                )
+            );
         }
 
-        /**
-         * Runs the current application.
-         *
-         * @param InputInterface  $input  An Input instance
-         * @param OutputInterface $output An Output instance
-         *
-         * @return integer 0 if everything went fine, or an error code
-         */
-        public function doRun(InputInterface $input, OutputInterface $output)
-        {
-            if (!$input->hasParameterOption('--quiet')) {
-                $output->write(
-                    sprintf(
-                        "hphpa %s by Sebastian Bergmann.\n\n",
-                        $this->getVersion()
-                    )
-                );
-            }
-
-            if ($input->hasParameterOption('--version') ||
-                $input->hasParameterOption('-V')) {
-                exit;
-            }
-
-            parent::doRun($input, $output);
+        if ($input->hasParameterOption('--version') ||
+            $input->hasParameterOption('-V')) {
+            exit;
         }
+
+        parent::doRun($input, $output);
     }
 }

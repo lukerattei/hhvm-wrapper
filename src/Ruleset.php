@@ -41,50 +41,49 @@
  * @since     File available since Release 1.1.0
  */
 
-namespace SebastianBergmann\HPHPA
+namespace SebastianBergmann\HPHPA;
+
+use \TheSeer\fDOM\fDOMDocument;
+
+/**
+ * Configuration file loader.
+ *
+ * @author    Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ * @link      http://github.com/sebastianbergmann/hphpa/tree
+ * @since     Class available since Release 1.1.0
+ */
+class Ruleset
 {
-    use \TheSeer\fDOM\fDOMDocument;
+    /**
+     * @var fDOMDocument
+     */
+    protected $xml;
 
     /**
-     * Configuration file loader.
-     *
-     * @author    Sebastian Bergmann <sebastian@phpunit.de>
-     * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
-     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @link      http://github.com/sebastianbergmann/hphpa/tree
-     * @since     Class available since Release 1.1.0
+     * @param string $file
      */
-    class Ruleset
+    public function __construct($file)
     {
-        /**
-         * @var fDOMDocument
-         */
-        protected $xml;
+        $this->xml = new fDOMDocument;
+        $this->xml->load($file);
+    }
 
-        /**
-         * @param string $file
-         */
-        public function __construct($file)
-        {
-            $this->xml = new fDOMDocument;
-            $this->xml->load($file);
+    /**
+     * @return array
+     */
+    public function getRules()
+    {
+        $rules = array();
+
+        foreach ($this->xml->getDOMXPath()->query('rule') as $rule) {
+            $name    = (string)$rule->getAttribute('name');
+            $message = (string)$rule->getAttribute('message');
+
+            $rules[$name] = $message;
         }
 
-        /**
-         * @return array
-         */
-        public function getRules()
-        {
-            $rules = array();
-
-            foreach ($this->xml->getDOMXPath()->query('rule') as $rule) {
-                $name    = (string)$rule->getAttribute('name');
-                $message = (string)$rule->getAttribute('message');
-
-                $rules[$name] = $message;
-            }
-
-            return $rules;
-        }
+        return $rules;
     }
 }

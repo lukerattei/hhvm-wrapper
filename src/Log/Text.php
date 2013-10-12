@@ -41,56 +41,55 @@
  * @since     File available since Release 2.0.0
  */
 
-namespace SebastianBergmann\HPHPA\Log
+namespace SebastianBergmann\HPHPA\Log;
+
+use SebastianBergmann\HPHPA\Result;
+
+/**
+ * Writes violations in Checkstyle XML format to a file.
+ *
+ * @author    Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ * @link      http://github.com/sebastianbergmann/hphpa/tree
+ * @since     Class available since Release 2.0.0
+ */
+class Text
 {
-    use SebastianBergmann\HPHPA\Result;
-
     /**
-     * Writes violations in Checkstyle XML format to a file.
-     *
-     * @author    Sebastian Bergmann <sebastian@phpunit.de>
-     * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
-     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @link      http://github.com/sebastianbergmann/hphpa/tree
-     * @since     Class available since Release 2.0.0
+     * @param Result $result
+     * @param string $filename
      */
-    class Text
+    public function generate(Result $result, $filename)
     {
-        /**
-         * @param Result $result
-         * @param string $filename
-         */
-        public function generate(Result $result, $filename)
-        {
-            $fp    = fopen($filename, 'w');
-            $first = TRUE;
+        $fp    = fopen($filename, 'w');
+        $first = TRUE;
 
-            foreach ($result->getViolations() as $file => $lines) {
-                if ($first) {
-                    $first = FALSE;
-                } else {
-                    fwrite($fp, "\n");
-                }
-
-                fwrite($fp, $file . "\n");
-
-                ksort($lines);
-
-                foreach ($lines as $line => $violations) {
-                    foreach ($violations as $violation) {
-                        fwrite(
-                          $fp,
-                          sprintf(
-                            "  %-6d%s\n",
-                            $line,
-                            wordwrap($violation['message'], 70, "\n        ")
-                          )
-                        );
-                    }
-                }
+        foreach ($result->getViolations() as $file => $lines) {
+            if ($first) {
+                $first = FALSE;
+            } else {
+                fwrite($fp, "\n");
             }
 
-            fclose($fp);
+            fwrite($fp, $file . "\n");
+
+            ksort($lines);
+
+            foreach ($lines as $line => $violations) {
+                foreach ($violations as $violation) {
+                    fwrite(
+                      $fp,
+                      sprintf(
+                        "  %-6d%s\n",
+                        $line,
+                        wordwrap($violation['message'], 70, "\n        ")
+                      )
+                    );
+                }
+            }
         }
+
+        fclose($fp);
     }
 }

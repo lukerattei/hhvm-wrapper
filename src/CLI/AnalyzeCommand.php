@@ -41,205 +41,204 @@
  * @since     File available since Release 2.0.0
  */
 
-namespace SebastianBergmann\HPHPA\CLI
+namespace SebastianBergmann\HPHPA\CLI;
+
+use SebastianBergmann\FinderFacade\FinderFacade;
+use Symfony\Component\Console\Command\Command as AbstractCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use SebastianBergmann\HPHPA\Analyzer;
+use SebastianBergmann\HPHPA\Result;
+use SebastianBergmann\HPHPA\Ruleset;
+use SebastianBergmann\HPHPA\Log\Checkstyle;
+use SebastianBergmann\HPHPA\Log\Text;
+
+/**
+ * @author    Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ * @link      http://github.com/sebastianbergmann/hphpa/tree
+ * @since     Class available since Release 2.0.0
+ */
+class AnalyzeCommand extends AbstractCommand
 {
-    use SebastianBergmann\FinderFacade\FinderFacade;
-    use Symfony\Component\Console\Command\Command as AbstractCommand;
-    use Symfony\Component\Console\Input\InputArgument;
-    use Symfony\Component\Console\Input\InputInterface;
-    use Symfony\Component\Console\Input\InputOption;
-    use Symfony\Component\Console\Output\OutputInterface;
-    use SebastianBergmann\HPHPA\Analyzer;
-    use SebastianBergmann\HPHPA\Result;
-    use SebastianBergmann\HPHPA\Ruleset;
-    use SebastianBergmann\HPHPA\Log\Checkstyle;
-    use SebastianBergmann\HPHPA\Log\Text;
+    /**
+     * Configures the current command.
+     */
+    protected function configure()
+    {
+        $this->setName('analyze')
+             ->setDefinition(
+                 array(
+                   new InputArgument(
+                     'values',
+                     InputArgument::IS_ARRAY
+                   )
+                 )
+               )
+             ->addOption(
+                 'names',
+                 NULL,
+                 InputOption::VALUE_REQUIRED,
+                 'A comma-separated list of file names to check',
+                 array('*.php')
+               )
+             ->addOption(
+                 'names-exclude',
+                 NULL,
+                 InputOption::VALUE_REQUIRED,
+                 'A comma-separated list of file names to exclude',
+                array()
+               )
+             ->addOption(
+                 'exclude',
+                 NULL,
+                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                 'Exclude a directory from code analysis'
+               )
+             ->addOption(
+                 'ruleset',
+                 NULL,
+                 InputOption::VALUE_REQUIRED,
+                 'Read list of rules to apply from XML file'
+               )
+             ->addOption(
+                 'checkstyle',
+                 NULL,
+                 InputOption::VALUE_REQUIRED,
+                 'Write report in Checkstyle XML format to file'
+               );
+    }
 
     /**
-     * @author    Sebastian Bergmann <sebastian@phpunit.de>
-     * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
-     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @link      http://github.com/sebastianbergmann/hphpa/tree
-     * @since     Class available since Release 2.0.0
+     * Executes the current command.
+     *
+     * @param InputInterface  $input  An InputInterface instance
+     * @param OutputInterface $output An OutputInterface instance
+     *
+     * @return null|integer null or 0 if everything went fine, or an error code
      */
-    class AnalyzeCommand extends AbstractCommand
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /**
-         * Configures the current command.
-         */
-        protected function configure()
-        {
-            $this->setName('analyze')
-                 ->setDefinition(
-                     array(
-                       new InputArgument(
-                         'values',
-                         InputArgument::IS_ARRAY
-                       )
-                     )
-                   )
-                 ->addOption(
-                     'names',
-                     NULL,
-                     InputOption::VALUE_REQUIRED,
-                     'A comma-separated list of file names to check',
-                     array('*.php')
-                   )
-                 ->addOption(
-                     'names-exclude',
-                     NULL,
-                     InputOption::VALUE_REQUIRED,
-                     'A comma-separated list of file names to exclude',
-                    array()
-                   )
-                 ->addOption(
-                     'exclude',
-                     NULL,
-                     InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                     'Exclude a directory from code analysis'
-                   )
-                 ->addOption(
-                     'ruleset',
-                     NULL,
-                     InputOption::VALUE_REQUIRED,
-                     'Read list of rules to apply from XML file'
-                   )
-                 ->addOption(
-                     'checkstyle',
-                     NULL,
-                     InputOption::VALUE_REQUIRED,
-                     'Write report in Checkstyle XML format to file'
-                   );
+        $finder = new FinderFacade(
+            $input->getArgument('values'),
+            $input->getOption('exclude'),
+            $this->handleCSVOption($input, 'names'),
+            $this->handleCSVOption($input, 'names-exclude')
+        );
+
+        $files = $finder->findFiles();
+
+        if (empty($files)) {
+            $output->writeln('No files found to scan');
+            exit(1);
         }
 
-        /**
-         * Executes the current command.
-         *
-         * @param InputInterface  $input  An InputInterface instance
-         * @param OutputInterface $output An OutputInterface instance
-         *
-         * @return null|integer null or 0 if everything went fine, or an error code
-         */
-        protected function execute(InputInterface $input, OutputInterface $output)
-        {
-            $finder = new FinderFacade(
-                $input->getArgument('values'),
-                $input->getOption('exclude'),
-                $this->handleCSVOption($input, 'names'),
-                $this->handleCSVOption($input, 'names-exclude')
-            );
+        $checkstyle  = $input->getOption('checkstyle');
+        $quiet       = $output->getVerbosity() == OutputInterface::VERBOSITY_QUIET;
+        $rulesetFile = $input->getOption('ruleset');
 
-            $files = $finder->findFiles();
+        if (!$rulesetFile) {
+            $rulesetFile = $this->getDefaultRulesetFile();
+        }
 
-            if (empty($files)) {
-                $output->writeln('No files found to scan');
-                exit(1);
-            }
+        try {
+            $ruleset = new Ruleset($rulesetFile);
+            $rules   = $ruleset->getRules();
+        }
 
-            $checkstyle  = $input->getOption('checkstyle');
-            $quiet       = $output->getVerbosity() == OutputInterface::VERBOSITY_QUIET;
-            $rulesetFile = $input->getOption('ruleset');
+        catch (\Exception $e) {
+            $output->writeln('Could not read ruleset');
+            exit(1);
+        }
 
-            if (!$rulesetFile) {
-                $rulesetFile = $this->getDefaultRulesetFile();
-            }
- 
-            try {
-                $ruleset = new Ruleset($rulesetFile);
-                $rules   = $ruleset->getRules();
-            }
+        $output->writeln('Using ruleset ' . $rulesetFile . "\n");
 
-            catch (\Exception $e) {
-                $output->writeln('Could not read ruleset');
-                exit(1);
-            }
+        $analyzer = new Analyzer;
+        $result   = new Result;
+        $result->setRules($rules);
 
-            $output->writeln('Using ruleset ' . $rulesetFile . "\n");
+        try {
+            $analyzer->run($files, $result);
+        }
 
-            $analyzer = new Analyzer;
-            $result   = new Result;
-            $result->setRules($rules);
+        catch (\RuntimeException $e) {
+            $output->writeln($e->getMessage());
+            exit(1);
+        }
 
-            try {
-                $analyzer->run($files, $result);
-            }
+        if (!$quiet) {
+            $report = new Text;
+            $report->generate($result, 'php://stdout');
+        }
 
-            catch (\RuntimeException $e) {
-                $output->writeln($e->getMessage());
-                exit(1);
-            }
+        $numFilesWithViolations = 0;
+        $numViolations          = 0;
 
-            if (!$quiet) {
-                $report = new Text;
-                $report->generate($result, 'php://stdout');
-            }
+        foreach ($result->getViolations() as $lines) {
+            $numFilesWithViolations++;
 
-            $numFilesWithViolations = 0;
-            $numViolations          = 0;
-
-            foreach ($result->getViolations() as $lines) {
-                $numFilesWithViolations++;
-
-                foreach ($lines as $violations) {
-                    $numViolations += count($violations);
-                }
-            }
-
-            $output->writeln(
-                sprintf(
-                    "%sFound %d violation%s in %d file%s (out of %d total file%s).",
-                    !$quiet && $numViolations > 0 ? "\n" : '',
-                    $numViolations,
-                    $numViolations != 1 ? 's' : '',
-                    $numFilesWithViolations,
-                    $numFilesWithViolations != 1 ? 's' : '',
-                    count($files),
-                    count($files) != 1 ? 's' : ''
-                )
-            );
-
-            if ($checkstyle) {
-                $report = new Checkstyle;
-                $report->generate($result, $checkstyle);
-            }
-
-            if ($numViolations > 0) {
-                exit(1);
+            foreach ($lines as $violations) {
+                $numViolations += count($violations);
             }
         }
 
-        private function getDefaultRulesetFile()
-        {
-            if (defined('__HPHPA_PHAR__')) {
-                return 'phar://' . basename(__HPHPA_PHAR__) . '/ruleset.xml';
-            }
+        $output->writeln(
+            sprintf(
+                "%sFound %d violation%s in %d file%s (out of %d total file%s).",
+                !$quiet && $numViolations > 0 ? "\n" : '',
+                $numViolations,
+                $numViolations != 1 ? 's' : '',
+                $numFilesWithViolations,
+                $numFilesWithViolations != 1 ? 's' : '',
+                count($files),
+                count($files) != 1 ? 's' : ''
+            )
+        );
 
-            else if (strpos('@data_dir@', '@data_dir') === 0) {
-                return realpath(
-                  dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'ruleset.xml'
-                );
-            }
+        if ($checkstyle) {
+            $report = new Checkstyle;
+            $report->generate($result, $checkstyle);
+        }
 
+        if ($numViolations > 0) {
+            exit(1);
+        }
+    }
+
+    private function getDefaultRulesetFile()
+    {
+        if (defined('__HPHPA_PHAR__')) {
+            return 'phar://' . basename(__HPHPA_PHAR__) . '/ruleset.xml';
+        }
+
+        else if (strpos('@data_dir@', '@data_dir') === 0) {
             return realpath(
-              '@data_dir@' . DIRECTORY_SEPARATOR . 'hphpa' . DIRECTORY_SEPARATOR . 'ruleset.xml'
+              dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'ruleset.xml'
             );
         }
 
-        /**
-         * @param  Symfony\Component\Console\Input\InputOption $input
-         * @param  string                                      $option
-         * @return array
-         */
-        private function handleCSVOption(InputInterface $input, $option)
-        {
-            $result = $input->getOption($option);
+        return realpath(
+          '@data_dir@' . DIRECTORY_SEPARATOR . 'hphpa' . DIRECTORY_SEPARATOR . 'ruleset.xml'
+        );
+    }
 
-            if (!is_array($result)) {
-                $result = explode(',', $result);
-                array_map('trim', $result);
-            }
+    /**
+     * @param  Symfony\Component\Console\Input\InputOption $input
+     * @param  string                                      $option
+     * @return array
+     */
+    private function handleCSVOption(InputInterface $input, $option)
+    {
+        $result = $input->getOption($option);
 
-            return $result;
+        if (!is_array($result)) {
+            $result = explode(',', $result);
+            array_map('trim', $result);
         }
+
+        return $result;
     }
 }

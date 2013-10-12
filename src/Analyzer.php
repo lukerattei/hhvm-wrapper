@@ -41,55 +41,54 @@
  * @since     File available since Release 1.0.0
  */
 
-namespace SebastianBergmann\HPHPA
+namespace SebastianBergmann\HPHPA;
+
+/**
+ * Wrapper for HipHop's static analyzer.
+ *
+ * @author    Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ * @link      http://github.com/sebastianbergmann/hphpa/tree
+ * @since     Class available since Release 1.0.0
+ */
+class Analyzer
 {
     /**
-     * Wrapper for HipHop's static analyzer.
-     *
-     * @author    Sebastian Bergmann <sebastian@phpunit.de>
-     * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
-     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-     * @link      http://github.com/sebastianbergmann/hphpa/tree
-     * @since     Class available since Release 1.0.0
+     * @param array  $files
+     * @param Result $result
      */
-    class Analyzer
+    public function run(array $files, Result $result)
     {
-        /**
-         * @param array  $files
-         * @param Result $result
-         */
-        public function run(array $files, Result $result)
-        {
-            $tmpfname = tempnam('/tmp', 'hhvm');
-            $tmpdname = dirname($tmpfname) . DIRECTORY_SEPARATOR;
+        $tmpfname = tempnam('/tmp', 'hhvm');
+        $tmpdname = dirname($tmpfname) . DIRECTORY_SEPARATOR;
 
-            file_put_contents($tmpfname, join("\n", $files));
+        file_put_contents($tmpfname, join("\n", $files));
 
-            shell_exec(
-              sprintf(
-                'hhvm --hphp -t analyze --input-list %s --output-dir %s --log 2 2>&1',
-                $tmpfname,
-                dirname($tmpfname)
-              )
+        shell_exec(
+          sprintf(
+            'hhvm --hphp -t analyze --input-list %s --output-dir %s --log 2 2>&1',
+            $tmpfname,
+            dirname($tmpfname)
+          )
+        );
+
+        unlink($tmpfname);
+
+        $codeError = $tmpdname . 'CodeError.js';
+        $stats     = $tmpdname . 'Stats.js';
+        $program   = $tmpdname . 'program';
+
+        if (!file_exists($codeError)) {
+            throw new \RuntimeException(
+              'HHVM failed to complete static analysis.'
             );
-
-            unlink($tmpfname);
-
-            $codeError = $tmpdname . 'CodeError.js';
-            $stats     = $tmpdname . 'Stats.js';
-            $program   = $tmpdname . 'program';
-
-            if (!file_exists($codeError)) {
-                throw new \RuntimeException(
-                  'HHVM failed to complete static analysis.'
-                );
-            }
-
-            $result->parse(json_decode(file_get_contents($codeError), TRUE));
-
-            unlink($codeError);
-            unlink($stats);
-            unlink($program);
         }
+
+        $result->parse(json_decode(file_get_contents($codeError), TRUE));
+
+        unlink($codeError);
+        unlink($stats);
+        unlink($program);
     }
 }
