@@ -69,7 +69,7 @@ class Analyzer
           sprintf(
             'hhvm --hphp -t analyze --input-list %s --output-dir %s --log 2 2>&1',
             $tmpfname,
-            dirname($tmpfname)
+            $tmpdname
           )
         );
 
