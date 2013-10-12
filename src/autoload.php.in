@@ -1,6 +1,6 @@
 <?php
 /**
- * hphpa
+ * hhvm-wrapper
  *
  * Copyright (c) 2012-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
