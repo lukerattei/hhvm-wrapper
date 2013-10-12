@@ -53,8 +53,8 @@ spl_autoload_register(
         if ($classes === null) {
             $classes = array(
               'sebastianbergmann\\hphpa\\analyzer' => '/Analyzer.php',
+          'sebastianbergmann\\hphpa\\cli\\analyzecommand' => '/CLI/AnalyzeCommand.php',
           'sebastianbergmann\\hphpa\\cli\\application' => '/CLI/Application.php',
-          'sebastianbergmann\\hphpa\\cli\\command' => '/CLI/Command.php',
           'sebastianbergmann\\hphpa\\log\\checkstyle' => '/Log/Checkstyle.php',
           'sebastianbergmann\\hphpa\\log\\text' => '/Log/Text.php',
           'sebastianbergmann\\hphpa\\result' => '/Result.php',

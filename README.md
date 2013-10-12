@@ -42,7 +42,7 @@ The following two commands (which you may have to run as `root`) are all that is
 
 ## Usage Example
 
-    ➜  ~  hphpa --checkstyle hphpa.xml /usr/local/src/code-coverage/PHP
+    ➜  ~  hphpa analyze --checkstyle hphpa.xml /usr/local/src/code-coverage/PHP
     hphpa 2.0.0 by Sebastian Bergmann.
 
     Using ruleset /usr/share/pear/data/hphpa/ruleset.xml

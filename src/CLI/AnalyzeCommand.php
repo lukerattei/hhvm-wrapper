@@ -62,14 +62,14 @@ namespace SebastianBergmann\HPHPA\CLI
      * @link      http://github.com/sebastianbergmann/hphpa/tree
      * @since     Class available since Release 2.0.0
      */
-    class Command extends AbstractCommand
+    class AnalyzeCommand extends AbstractCommand
     {
         /**
          * Configures the current command.
          */
         protected function configure()
         {
-            $this->setName('hphpa')
+            $this->setName('analyze')
                  ->setDefinition(
                      array(
                        new InputArgument(
