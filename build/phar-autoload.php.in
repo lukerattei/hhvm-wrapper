@@ -23,7 +23,7 @@ spl_autoload_register(
 
 Phar::mapPhar('___PHAR___');
 
-$textui = new SebastianBergmann\HPHPA\TextUI\Command;
-$textui->main();
+$application = new SebastianBergmann\HPHPA\CLI\Application;
+$application->run();
 
 __HALT_COMPILER();

@@ -41,29 +41,25 @@
  * @since     File available since Release 1.1.0
  */
 
-require_once 'SebastianBergmann/FinderFacade/autoload.php';
-require_once 'SebastianBergmann/Version/autoload.php';
-require_once 'TheSeer/fDOMDocument/autoload.php';
-require_once 'ezc/Base/base.php';
+require 'SebastianBergmann/FinderFacade/autoload.php';
+require 'SebastianBergmann/Version/autoload.php';
+require 'TheSeer/fDOMDocument/autoload.php';
+require 'Symfony/Component/Console/autoloader.php';
 
-function hphpa_autoload($class) {
-    static $classes = NULL;
-    static $path = NULL;
+spl_autoload_register(
+    function($class) {
+        static $classes = null;
 
-    if ($classes === NULL) {
-        $classes = array(
-          ___CLASSLIST___
-        );
+        if ($classes === null) {
+            $classes = array(
+              ___CLASSLIST___
+            );
+        }
 
-        $path = dirname(__FILE__);
+        $cn = strtolower($class);
+
+        if (isset($classes[$cn])) {
+            require ___BASEDIR___$classes[$cn];
+        }
     }
-
-    $cn = strtolower($class);
-
-    if (isset($classes[$cn])) {
-        require $path . $classes[$cn];
-    }
-}
-
-spl_autoload_register('hphpa_autoload');
-spl_autoload_register(array('ezcBase', 'autoload'));
+);

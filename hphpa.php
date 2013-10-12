@@ -48,6 +48,5 @@ if (strpos('@php_bin@', '@php_bin') === 0) {
     require 'SebastianBergmann/HPHPA/autoload.php';
 }
 
-
-$textui = new SebastianBergmann\HPHPA\TextUI\Command;
-$textui->main();
+$application = new SebastianBergmann\HPHPA\CLI\Application;
+$application->run();

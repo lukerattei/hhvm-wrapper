@@ -9,8 +9,8 @@
                       http://pear.php.net/dtd/package-2.0.xsd">
  <name>hphpa</name>
  <channel>pear.phpunit.de</channel>
- <summary>Convenience wrapper for HipHop's static analyzer.</summary>
- <description>Convenience wrapper for HipHop's static analyzer.</description>
+ <summary>Convenience wrapper for HipHop's static analyzer</summary>
+ <description>Convenience wrapper for HipHop's static analyzer</description>
  <lead>
   <name>Sebastian Bergmann</name>
   <user>sb</user>
@@ -32,14 +32,15 @@
   <dir name="/">
    <dir name="SebastianBergmann">
     <dir name="HPHPA">
-     <dir name="Report">
-      <file baseinstalldir="/" name="Checkstyle.php" role="php" />
-      <file baseinstalldir="/" name="Text.php" role="php" />
-     </dir>
-     <dir name="TextUI">
+     <dir name="CLI">
+      <file baseinstalldir="/" name="Application.php" role="php" />
       <file baseinstalldir="/" name="Command.php" role="php">
        <tasks:replace from="@data_dir@" to="data_dir" type="pear-config" />
       </file>
+     </dir>
+     <dir name="Log">
+      <file baseinstalldir="/" name="Checkstyle.php" role="php" />
+      <file baseinstalldir="/" name="Text.php" role="php" />
      </dir>
      <file baseinstalldir="/" name="autoload.php" role="php" />
      <file baseinstalldir="/" name="Analyzer.php" role="php" />
@@ -48,7 +49,6 @@
     </dir>
    </dir>
    <file baseinstalldir="/" name="ruleset.xml" role="data"/>
-   <file baseinstalldir="/" name="ChangeLog.md" role="doc"/>
    <file baseinstalldir="/" name="LICENSE" role="doc"/>
    <file baseinstalldir="/" name="README.md" role="doc"/>
    <file baseinstalldir="/" name="hphpa.php" role="script">
@@ -66,9 +66,9 @@
     <min>1.9.4</min>
    </pearinstaller>
    <package>
-    <name>ConsoleTools</name>
-    <channel>components.ez.no</channel>
-    <min>1.6</min>
+    <name>Console</name>
+    <channel>pear.symfony.com</channel>
+    <min>2.2.0</min>
    </package>
    <package>
     <name>fDOMDocument</name>

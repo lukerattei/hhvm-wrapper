@@ -38,34 +38,59 @@
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @since     File available since Release 1.1.0
+ * @since     File available since Release 2.0.0
  */
 
-require 'SebastianBergmann/FinderFacade/autoload.php';
-require 'SebastianBergmann/Version/autoload.php';
-require 'TheSeer/fDOMDocument/autoload.php';
-require 'Symfony/Component/Console/autoloader.php';
+namespace SebastianBergmann\HPHPA\Log
+{
+    use SebastianBergmann\HPHPA\Result;
 
-spl_autoload_register(
-    function($class) {
-        static $classes = null;
+    /**
+     * Writes violations in Checkstyle XML format to a file.
+     *
+     * @author    Sebastian Bergmann <sebastian@phpunit.de>
+     * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
+     * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+     * @link      http://github.com/sebastianbergmann/hphpa/tree
+     * @since     Class available since Release 2.0.0
+     */
+    class Text
+    {
+        /**
+         * @param Result $result
+         * @param string $filename
+         */
+        public function generate(Result $result, $filename)
+        {
+            $fp    = fopen($filename, 'w');
+            $first = TRUE;
 
-        if ($classes === null) {
-            $classes = array(
-              'sebastianbergmann\\hphpa\\analyzer' => '/Analyzer.php',
-          'sebastianbergmann\\hphpa\\cli\\application' => '/CLI/Application.php',
-          'sebastianbergmann\\hphpa\\cli\\command' => '/CLI/Command.php',
-          'sebastianbergmann\\hphpa\\log\\checkstyle' => '/Log/Checkstyle.php',
-          'sebastianbergmann\\hphpa\\log\\text' => '/Log/Text.php',
-          'sebastianbergmann\\hphpa\\result' => '/Result.php',
-          'sebastianbergmann\\hphpa\\ruleset' => '/Ruleset.php'
-            );
-        }
+            foreach ($result->getViolations() as $file => $lines) {
+                if ($first) {
+                    $first = FALSE;
+                } else {
+                    fwrite($fp, "\n");
+                }
 
-        $cn = strtolower($class);
+                fwrite($fp, $file . "\n");
 
-        if (isset($classes[$cn])) {
-            require __DIR__ . $classes[$cn];
+                ksort($lines);
+
+                foreach ($lines as $line => $violations) {
+                    foreach ($violations as $violation) {
+                        fwrite(
+                          $fp,
+                          sprintf(
+                            "  %-6d%s\n",
+                            $line,
+                            wordwrap($violation['message'], 70, "\n        ")
+                          )
+                        );
+                    }
+                }
+            }
+
+            fclose($fp);
         }
     }
-);
+}
