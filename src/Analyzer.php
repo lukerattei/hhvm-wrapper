@@ -60,7 +60,7 @@ namespace SebastianBergmann\HPHPA
          */
         public function run(array $files, Result $result)
         {
-            $tmpfname = tempnam('/tmp', 'hphp');
+            $tmpfname = tempnam('/tmp', 'hhvm');
             file_put_contents($tmpfname, join("\n", $files));
 
             shell_exec(
@@ -75,10 +75,11 @@ namespace SebastianBergmann\HPHPA
 
             $codeError = dirname($tmpfname) . DIRECTORY_SEPARATOR . 'CodeError.js';
             $stats     = dirname($tmpfname) . DIRECTORY_SEPARATOR . 'Stats.js';
+            $program   = dirname($tmpfname) . DIRECTORY_SEPARATOR . 'program';
 
             if (!file_exists($codeError)) {
                 throw new \RuntimeException(
-                  'HipHop failed to complete static analysis.'
+                  'HHVM failed to complete static analysis.'
                 );
             }
 
@@ -86,6 +87,7 @@ namespace SebastianBergmann\HPHPA
 
             unlink($codeError);
             unlink($stats);
+            unlink($program);
         }
     }
 }
