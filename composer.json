@@ -1,6 +1,6 @@
 {
-    "name": "sebastian/hphpa",
-    "description": "Convenience wrapper for HipHop's static analyzer",
+    "name": "sebastian/hhvm-wrapper",
+    "description": "Convenience wrapper for HHVM",
     "homepage": "https://github.com/sebastianbergmann/hphpa",
     "license": "BSD-3-Clause",
     "authors": [

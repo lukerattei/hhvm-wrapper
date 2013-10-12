@@ -7,10 +7,10 @@
                       http://pear.php.net/dtd/tasks-1.0.xsd
                       http://pear.php.net/dtd/package-2.0
                       http://pear.php.net/dtd/package-2.0.xsd">
- <name>hphpa</name>
+ <name>hhvm-wrapper</name>
  <channel>pear.phpunit.de</channel>
- <summary>Convenience wrapper for HipHop's static analyzer</summary>
- <description>Convenience wrapper for HipHop's static analyzer</description>
+ <summary>Convenience wrapper for HHVM</summary>
+ <description>Convenience wrapper for HHVM</description>
  <lead>
   <name>Sebastian Bergmann</name>
   <user>sb</user>

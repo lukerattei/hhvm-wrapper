@@ -1,6 +1,6 @@
 <?php
 /**
- * hphpa
+ * hhvm-wrapper
  *
  * Copyright (c) 2012-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
@@ -34,7 +34,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   hphpa
+ * @package   hhvm-wrapper
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -59,7 +59,7 @@ use SebastianBergmann\HHVM\Log\Text;
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link      http://github.com/sebastianbergmann/hphpa/tree
+ * @link      http://github.com/sebastianbergmann/hhvm-wrapper/tree
  * @since     Class available since Release 2.0.0
  */
 class AnalyzeCommand extends AbstractCommand
@@ -221,7 +221,7 @@ class AnalyzeCommand extends AbstractCommand
         }
 
         return realpath(
-          '@data_dir@' . DIRECTORY_SEPARATOR . 'hphpa' . DIRECTORY_SEPARATOR . 'ruleset.xml'
+          '@data_dir@' . DIRECTORY_SEPARATOR . 'hhvm-wrapper' . DIRECTORY_SEPARATOR . 'ruleset.xml'
         );
     }
 
