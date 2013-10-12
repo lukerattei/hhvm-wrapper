@@ -55,6 +55,7 @@ spl_autoload_register(
               'sebastianbergmann\\hhvm\\analyzer' => '/Analyzer.php',
               'sebastianbergmann\\hhvm\\cli\\analyzecommand' => '/CLI/AnalyzeCommand.php',
               'sebastianbergmann\\hhvm\\cli\\application' => '/CLI/Application.php',
+              'sebastianbergmann\\hhvm\\cli\\basecommand' => '/CLI/BaseCommand.php',
               'sebastianbergmann\\hhvm\\cli\\compilecommand' => '/CLI/CompileCommand.php',
               'sebastianbergmann\\hhvm\\compiler' => '/Compiler.php',
               'sebastianbergmann\\hhvm\\log\\checkstyle' => '/Log/Checkstyle.php',

@@ -43,11 +43,12 @@
 
 namespace SebastianBergmann\HHVM\CLI;
 
+use SebastianBergmann\FinderFacade\FinderFacade;
+use Symfony\Component\Console\Command\Command as AbstractCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use SebastianBergmann\HHVM\Compiler;
 
 /**
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
@@ -56,29 +57,88 @@ use SebastianBergmann\HHVM\Compiler;
  * @link      http://github.com/sebastianbergmann/hhvm-wrapper/tree
  * @since     Class available since Release 2.0.0
  */
-class CompileCommand extends BaseCommand
+abstract class BaseCommand extends AbstractCommand
 {
     /**
      * Configures the current command.
      */
     protected function configure()
     {
-        parent::configure();
-
-        $this->setName('compile')
+        $this->setDefinition(
+                 array(
+                   new InputArgument(
+                     'values',
+                     InputArgument::IS_ARRAY
+                   )
+                 )
+               )
              ->addOption(
-                 'target',
+                 'names',
                  NULL,
                  InputOption::VALUE_REQUIRED,
-                 'Write intermediate representation (IR) to SQLite database'
+                 'A comma-separated list of file names to check',
+                 array('*.php')
+               )
+             ->addOption(
+                 'names-exclude',
+                 NULL,
+                 InputOption::VALUE_REQUIRED,
+                 'A comma-separated list of file names to exclude',
+                array()
+               )
+             ->addOption(
+                 'exclude',
+                 NULL,
+                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                 'Exclude a directory from code analysis'
                );
     }
 
-    protected function doExecute(InputInterface $input, OutputInterface $output, array $files, $quiet)
+    /**
+     * Executes the current command.
+     *
+     * @param InputInterface  $input  An InputInterface instance
+     * @param OutputInterface $output An OutputInterface instance
+     *
+     * @return null|integer null or 0 if everything went fine, or an error code
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $target = $input->getOption('target');
+        $finder = new FinderFacade(
+            $input->getArgument('values'),
+            $input->getOption('exclude'),
+            $this->handleCSVOption($input, 'names'),
+            $this->handleCSVOption($input, 'names-exclude')
+        );
 
-        $compiler = new Compiler;
-        $compiler->run($files, $target);
+        $files = $finder->findFiles();
+
+        if (empty($files)) {
+            $output->writeln('No files found to compile');
+            exit(1);
+        }
+
+        $quiet = $output->getVerbosity() == OutputInterface::VERBOSITY_QUIET;
+
+        $this->doExecute($input, $output, $files, $quiet);
+    }
+
+    abstract protected function doExecute(InputInterface $input, OutputInterface $output, array $files, $quiet);
+
+    /**
+     * @param  Symfony\Component\Console\Input\InputOption $input
+     * @param  string                                      $option
+     * @return array
+     */
+    private function handleCSVOption(InputInterface $input, $option)
+    {
+        $result = $input->getOption($option);
+
+        if (!is_array($result)) {
+            $result = explode(',', $result);
+            array_map('trim', $result);
+        }
+
+        return $result;
     }
 }

@@ -43,8 +43,6 @@
 
 namespace SebastianBergmann\HHVM\CLI;
 
-use SebastianBergmann\FinderFacade\FinderFacade;
-use Symfony\Component\Console\Command\Command as AbstractCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -62,42 +60,16 @@ use SebastianBergmann\HHVM\Log\Text;
  * @link      http://github.com/sebastianbergmann/hhvm-wrapper/tree
  * @since     Class available since Release 2.0.0
  */
-class AnalyzeCommand extends AbstractCommand
+class AnalyzeCommand extends BaseCommand
 {
     /**
      * Configures the current command.
      */
     protected function configure()
     {
+        parent::configure();
+
         $this->setName('analyze')
-             ->setDefinition(
-                 array(
-                   new InputArgument(
-                     'values',
-                     InputArgument::IS_ARRAY
-                   )
-                 )
-               )
-             ->addOption(
-                 'names',
-                 NULL,
-                 InputOption::VALUE_REQUIRED,
-                 'A comma-separated list of file names to check',
-                 array('*.php')
-               )
-             ->addOption(
-                 'names-exclude',
-                 NULL,
-                 InputOption::VALUE_REQUIRED,
-                 'A comma-separated list of file names to exclude',
-                array()
-               )
-             ->addOption(
-                 'exclude',
-                 NULL,
-                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                 'Exclude a directory from code analysis'
-               )
              ->addOption(
                  'ruleset',
                  NULL,
@@ -112,32 +84,9 @@ class AnalyzeCommand extends AbstractCommand
                );
     }
 
-    /**
-     * Executes the current command.
-     *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
-     *
-     * @return null|integer null or 0 if everything went fine, or an error code
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(InputInterface $input, OutputInterface $output, array $files, $quiet)
     {
-        $finder = new FinderFacade(
-            $input->getArgument('values'),
-            $input->getOption('exclude'),
-            $this->handleCSVOption($input, 'names'),
-            $this->handleCSVOption($input, 'names-exclude')
-        );
-
-        $files = $finder->findFiles();
-
-        if (empty($files)) {
-            $output->writeln('No files found to scan');
-            exit(1);
-        }
-
         $checkstyle  = $input->getOption('checkstyle');
-        $quiet       = $output->getVerbosity() == OutputInterface::VERBOSITY_QUIET;
         $rulesetFile = $input->getOption('ruleset');
 
         if (!$rulesetFile) {
@@ -223,22 +172,5 @@ class AnalyzeCommand extends AbstractCommand
         return realpath(
           '@data_dir@' . DIRECTORY_SEPARATOR . 'hhvm-wrapper' . DIRECTORY_SEPARATOR . 'ruleset.xml'
         );
-    }
-
-    /**
-     * @param  Symfony\Component\Console\Input\InputOption $input
-     * @param  string                                      $option
-     * @return array
-     */
-    private function handleCSVOption(InputInterface $input, $option)
-    {
-        $result = $input->getOption($option);
-
-        if (!is_array($result)) {
-            $result = explode(',', $result);
-            array_map('trim', $result);
-        }
-
-        return $result;
     }
 }

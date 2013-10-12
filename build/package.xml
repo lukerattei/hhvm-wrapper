@@ -37,6 +37,7 @@
        <tasks:replace from="@data_dir@" to="data_dir" type="pear-config" />
       </file>
       <file baseinstalldir="/" name="Application.php" role="php" />
+      <file baseinstalldir="/" name="BaseCommand.php" role="php" />
       <file baseinstalldir="/" name="CompileCommand.php" role="php" />
      </dir>
      <dir name="Log">
