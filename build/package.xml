@@ -33,10 +33,11 @@
    <dir name="SebastianBergmann">
     <dir name="HHVM">
      <dir name="CLI">
-      <file baseinstalldir="/" name="Application.php" role="php" />
-      <file baseinstalldir="/" name="Command.php" role="php">
+      <file baseinstalldir="/" name="AnalyzeCommand.php" role="php">
        <tasks:replace from="@data_dir@" to="data_dir" type="pear-config" />
       </file>
+      <file baseinstalldir="/" name="Application.php" role="php" />
+      <file baseinstalldir="/" name="CompileCommand.php" role="php" />
      </dir>
      <dir name="Log">
       <file baseinstalldir="/" name="Checkstyle.php" role="php" />
@@ -44,6 +45,7 @@
      </dir>
      <file baseinstalldir="/" name="autoload.php" role="php" />
      <file baseinstalldir="/" name="Analyzer.php" role="php" />
+     <file baseinstalldir="/" name="Compiler.php" role="php" />
      <file baseinstalldir="/" name="Result.php" role="php" />
      <file baseinstalldir="/" name="Ruleset.php" role="php" />
     </dir>

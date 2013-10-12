@@ -38,62 +38,47 @@
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @since     File available since Release 2.0.0
+ * @since     File available since Release 1.0.0
  */
 
-namespace SebastianBergmann\HHVM\CLI;
-
-use SebastianBergmann\Version;
-use Symfony\Component\Console\Application as AbstractApplication;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
+namespace SebastianBergmann\HHVM;
 
 /**
- * TextUI frontend for HHVM.
+ * Wrapper for HipHop's static analyzer.
  *
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link      http://github.com/sebastianbergmann/hhvm-wrapper/tree
- * @since     Class available since Release 2.0.0
+ * @since     Class available since Release 1.0.0
  */
-class Application extends AbstractApplication
+class Compiler
 {
-    public function __construct()
-    {
-        $version = new Version('2.0-dev', __DIR__);
-        parent::__construct('hhvm-wrapper', $version->getVersion());
-
-        $this->add(new AnalyzeCommand);
-        $this->add(new CompileCommand);
-    }
-
     /**
-     * Runs the current application.
-     *
-     * @param InputInterface  $input  An Input instance
-     * @param OutputInterface $output An Output instance
-     *
-     * @return integer 0 if everything went fine, or an error code
+     * @param array  $files
+     * @param string $target
      */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function run(array $files, $target)
     {
-        if (!$input->hasParameterOption('--quiet')) {
-            $output->write(
-                sprintf(
-                    "hhvm-wrapper %s by Sebastian Bergmann.\n\n",
-                    $this->getVersion()
-                )
-            );
-        }
+        $tmpfname = tempnam('/tmp', 'hhvm');
+        $tmpdname = dirname($tmpfname) . DIRECTORY_SEPARATOR;
 
-        if ($input->hasParameterOption('--version') ||
-            $input->hasParameterOption('-V')) {
-            exit;
-        }
+        file_put_contents($tmpfname, join("\n", $files));
 
-        parent::doRun($input, $output);
+        shell_exec(
+          sprintf(
+            'hhvm --hphp -thhbc --input-list %s --output-dir %s --log 2 2>&1',
+            $tmpfname,
+            dirname($tmpfname)
+          )
+        );
+
+        unlink($tmpfname);
+
+        $codeError = $tmpdname . 'CodeError.js';
+        $hhbc      = $tmpdname . 'hhvm.hhbc';
+
+        rename($hhbc, $target);
+        unlink($codeError);
     }
 }

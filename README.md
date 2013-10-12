@@ -42,6 +42,11 @@ The following two commands (which you may have to run as `root`) are all that is
 
 ## Usage Example
 
+### Compilation
+
+    ➜  ~  hhvm-wrapper compile --target application.hhbc /path/to/source
+    hhvm-wrapper 2.0.0 by Sebastian Bergmann.
+
 ### Static Code Analysis
 
     ➜  ~  hhvm-wrapper analyze --checkstyle logfile.xml /usr/local/src/code-coverage/PHP

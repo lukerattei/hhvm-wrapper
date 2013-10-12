@@ -1,6 +1,6 @@
 <?php
 /**
- * hhvm-wrapper
+ * hphpa
  *
  * Copyright (c) 2012-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
@@ -34,7 +34,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   hhvm-wrapper
+ * @package   hphpa
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -55,6 +55,8 @@ spl_autoload_register(
               'sebastianbergmann\\hhvm\\analyzer' => '/Analyzer.php',
               'sebastianbergmann\\hhvm\\cli\\analyzecommand' => '/CLI/AnalyzeCommand.php',
               'sebastianbergmann\\hhvm\\cli\\application' => '/CLI/Application.php',
+              'sebastianbergmann\\hhvm\\cli\\compilecommand' => '/CLI/CompileCommand.php',
+              'sebastianbergmann\\hhvm\\compiler' => '/Compiler.php',
               'sebastianbergmann\\hhvm\\log\\checkstyle' => '/Log/Checkstyle.php',
               'sebastianbergmann\\hhvm\\log\\text' => '/Log/Text.php',
               'sebastianbergmann\\hhvm\\result' => '/Result.php',
