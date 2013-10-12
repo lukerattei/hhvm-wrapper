@@ -74,11 +74,7 @@ class Compiler
         );
 
         unlink($tmpfname);
-
-        $codeError = $tmpdname . 'CodeError.js';
-        $hhbc      = $tmpdname . 'hhvm.hhbc';
-
-        rename($hhbc, $target);
-        unlink($codeError);
+        unlink($tmpdname . 'CodeError.js');
+        rename($tmpdname . 'hhvm.hhbc', $target);
     }
 }
