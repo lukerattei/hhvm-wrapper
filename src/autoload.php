@@ -60,6 +60,7 @@ spl_autoload_register(
               'sebastianbergmann\\hhvm\\compiler' => '/Compiler.php',
               'sebastianbergmann\\hhvm\\log\\checkstyle' => '/Log/Checkstyle.php',
               'sebastianbergmann\\hhvm\\log\\text' => '/Log/Text.php',
+              'sebastianbergmann\\hhvm\\processor' => '/Processor.php',
               'sebastianbergmann\\hhvm\\result' => '/Result.php',
               'sebastianbergmann\\hhvm\\ruleset' => '/Ruleset.php'
             );

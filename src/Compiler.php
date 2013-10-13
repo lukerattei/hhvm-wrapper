@@ -52,7 +52,7 @@ namespace SebastianBergmann\HHVM;
  * @link      http://github.com/sebastianbergmann/hhvm-wrapper/tree
  * @since     Class available since Release 1.0.0
  */
-class Compiler
+class Compiler extends Processor
 {
     /**
      * @param array  $files
@@ -60,21 +60,7 @@ class Compiler
      */
     public function run(array $files, $target)
     {
-        $tmpfname = tempnam('/tmp', 'hhvm');
-        $tmpdname = dirname($tmpfname) . DIRECTORY_SEPARATOR;
-
-        file_put_contents($tmpfname, join("\n", $files));
-
-        shell_exec(
-          sprintf(
-            'hhvm --hphp -thhbc --input-list %s --output-dir %s --log 2 2>&1',
-            $tmpfname,
-            $tmpdname
-          )
-        );
-
-        unlink($tmpfname);
-        unlink($tmpdname . 'CodeError.js');
-        rename($tmpdname . 'hhvm.hhbc', $target);
+        $hhbcFile = $this->process($files, '--hphp -thhbc', 'hhvm.hhbc');
+        rename($hhbcFile, $target);
     }
 }

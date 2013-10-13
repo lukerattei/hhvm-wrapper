@@ -38,34 +38,68 @@
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @since     File available since Release 1.0.0
+ * @since     File available since Release 2.0.0
  */
 
 namespace SebastianBergmann\HHVM;
 
 /**
- * Wrapper for HHVM's static analyzer.
+ * Abstract wrapper for HHVM.
  *
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link      http://github.com/sebastianbergmann/hhvm-wrapper/tree
- * @since     Class available since Release 1.0.0
+ * @since     Class available since Release 2.0.0
  */
-class Analyzer extends Processor
+abstract class Processor
 {
     /**
-     * @param array  $files
-     * @param Result $result
+     * @param  array  $files
+     * @param  string $command
+     * @param  string $outputFile
+     * @return string
      */
-    public function run(array $files, Result $result)
+    protected function process(array $files, $command, $outputFile)
     {
-        $codeError = $this->process(
-          $files, '--hphp -t analyze', 'CodeError.js'
+        $inputListFile = tempnam('/tmp', 'hhvm');
+        $outputDir     = dirname($inputListFile) . DIRECTORY_SEPARATOR;
+
+        file_put_contents($inputListFile, join("\n", $files));
+
+        shell_exec(
+          sprintf(
+            'hhvm %s --input-list %s --output-dir %s --log 2 2>&1',
+            $command,
+            $inputListFile,
+            $outputDir
+          )
         );
 
-        $result->parse(json_decode(file_get_contents($codeError), TRUE));
+        if (!file_exists($outputDir . $outputFile)) {
+            throw new \RuntimeException(
+              'HHVM failed to process the files.'
+            );
+        }
 
-        unlink($codeError);
+        unlink($inputListFile);
+
+        $codeError = $outputDir . 'CodeError.js';
+        $stats     = $outputDir . 'Stats.js';
+        $program   = $outputDir . 'program';
+
+        if ($outputFile != 'CodeError.js' && file_exists($codeError)) {
+            unlink($codeError);
+        }
+
+        if (file_exists($program)) {
+            unlink($program);
+        }
+
+        if (file_exists($stats)) {
+            unlink($stats);
+        }
+
+        return $outputDir . $outputFile;
     }
 }
