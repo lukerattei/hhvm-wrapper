@@ -70,6 +70,7 @@ class AnalyzeCommand extends BaseCommand
         parent::configure();
 
         $this->setName('analyze')
+             ->setDescription('Perform static code analysis on PHP sourcecode')
              ->addOption(
                  'ruleset',
                  NULL,

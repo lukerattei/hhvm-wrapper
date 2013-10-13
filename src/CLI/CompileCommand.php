@@ -66,11 +66,12 @@ class CompileCommand extends BaseCommand
         parent::configure();
 
         $this->setName('compile')
+             ->setDescription('Generate HipHop Bytecode (HHBC) from PHP sourcecode')
              ->addOption(
                  'target',
                  NULL,
                  InputOption::VALUE_REQUIRED,
-                 'Write intermediate representation (IR) to SQLite database'
+                 'Write HipHop Bytecode (HHBC) to SQLite database'
                );
     }
 
