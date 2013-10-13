@@ -44,7 +44,7 @@
 namespace SebastianBergmann\HHVM;
 
 /**
- * Wrapper for HipHop's static analyzer.
+ * Wrapper for HHVM's compiler.
  *
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>

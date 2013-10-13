@@ -44,7 +44,7 @@
 namespace SebastianBergmann\HHVM;
 
 /**
- * Parser for HipHop CodeError.js logfile.
+ * Parser for HHVM CodeError.js logfile.
  *
  * @author    Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright 2012-2013 Sebastian Bergmann <sebastian@phpunit.de>
