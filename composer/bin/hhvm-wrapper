@@ -67,5 +67,5 @@ if (!$found) {
     );
 }
 
-$application = new SebastianBergmann\HPHPA\CLI\Application;
+$application = new SebastianBergmann\HHVM\CLI\Application;
 $application->run();
