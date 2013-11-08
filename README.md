@@ -38,7 +38,7 @@ Make sure you have `~/.composer/vendor/bin/` in your path.
 The following two commands (which you may have to run as `root`) are all that is required to install hhvm-wrapper using the PEAR Installer:
 
     pear config-set auto_discover 1
-    pear install pear.phpunit.de/hhvm-wrapper
+    pear install pear.phpunit.de/hhvmwrapper
 
 ## Usage Example
 
