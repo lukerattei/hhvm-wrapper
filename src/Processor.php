@@ -55,6 +55,21 @@ namespace SebastianBergmann\HHVM;
 abstract class Processor
 {
     /**
+     * @var string
+     */
+    private $binary = 'hhvm';
+
+    /**
+     */
+    public function __construct()
+    {
+        if (isset($_ENV['HPHP_HOME']) &&
+            is_executable($_ENV['HPHP_HOME'] . '/hphp/hhvm/hhvm')) {
+            $this->binary = $_ENV['HPHP_HOME'] . '/hphp/hhvm/hhvm';
+        }
+    }
+
+    /**
      * @param  array  $files
      * @param  string $command
      * @param  string $outputFile
@@ -69,7 +84,8 @@ abstract class Processor
 
         shell_exec(
           sprintf(
-            'hhvm %s --input-list %s --output-dir %s --log 2 2>&1',
+            '%s %s --input-list %s --output-dir %s --log 2 2>&1',
+            $this->binary,
             $command,
             $inputListFile,
             $outputDir
