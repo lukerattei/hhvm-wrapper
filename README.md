@@ -1,6 +1,6 @@
 # hhvm-wrapper
 
-**hhvm-wrapper** is a convenience wrapper for [HHVM](http://github.com/facebook/hiphop-php/).
+**hhvm-wrapper** is a convenience wrapper for [HHVM](http://github.com/facebook/hhvm/).
 
 ## Installation
 
