@@ -38,29 +38,25 @@ Make sure you have `~/.composer/vendor/bin/` in your path.
 ### Compilation
 
     ➜  ~  hhvm-wrapper compile --target application.hhbc /path/to/source
-    hhvm-wrapper 2.0.0 by Sebastian Bergmann.
+    hhvm-wrapper 2.0.2 by Sebastian Bergmann.
 
 ### Static Code Analysis
 
-    ➜  ~  hhvm-wrapper analyze --checkstyle logfile.xml /usr/local/src/code-coverage/PHP
-    hhvm-wrapper 2.0.0 by Sebastian Bergmann.
+    ➜  ~  hhvm-wrapper analyze src
+    hhvm-wrapper 2.0.2 by Sebastian Bergmann.
 
-    Using ruleset /usr/share/pear/data/hhvm-wrapper/ruleset.xml
+    Using ruleset phar://hhvm-wrapper-2.0.2.phar/ruleset.xml
 
-    /usr/local/src/code-coverage/PHP/CodeCoverage/Filter.php
-      206   Too many arguments in function or method call:
-            $this->addFileToWhitelist($file, FALSE)
+    /usr/local/src/hhvm-wrapper/src/CLI/AnalyzeCommand.php
+      72    Call to unknown method: $this->setName('analyze')
 
-    Found 1 violation in 1 file (out of 21 total files).
+    /usr/local/src/hhvm-wrapper/src/CLI/BaseCommand.php
+      67    Call to unknown method: $this->setDefinition(array(new
+            Symfony\Component\Console\Input\InputArgument('values',
+            Symfony\Component\Console\Input\InputArgument::IS_ARRAY)))
 
-    ➜  ~  cat logfile.xml
-    <?xml version="1.0" encoding="UTF-8"?>
-    <checkstyle>
-     <file name="/usr/local/src/code-coverage/PHP/CodeCoverage/Filter.php">
-      <error line="206"
-             message="Too many arguments in function or method call:
-                      $this-&gt;addFileToWhitelist($file, FALSE)"
-             source="HipHop.PHP.Analysis.TooManyArgument"
-             severity="error"/>
-     </file>
-    </checkstyle>
+    /usr/local/src/hhvm-wrapper/src/CLI/CompileCommand.php
+      68    Call to unknown method: $this->setName('compile')
+
+    Found 3 violations in 3 files (out of 12 total files).
+
