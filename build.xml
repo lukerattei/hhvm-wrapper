@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project name="hhvm-wrapper" default="build">
  <target name="build" depends="prepare,lint"/>
 
  <target name="clean" description="Cleanup build artifacts">
+  <delete dir="${basedir}/bin"/>
+  <delete dir="${basedir}/vendor"/>
+  <delete file="${basedir}/composer.lock"/>
+  <delete file="${basedir}/composer.phar"/>
   <delete dir="${basedir}/build/phar"/>
-  <delete dir="${basedir}/build/SebastianBergmann"/>
-  <delete file="${basedir}/build/LICENSE"/>
-  <delete file="${basedir}/build/README.md"/>
-  <delete file="${basedir}/build/hhvm-wrapper.php"/>
-  <delete file="${basedir}/build/ruleset.xml"/>
   <delete>
    <fileset dir="${basedir}/build" includes="*.phar"/>
-   <fileset dir="${basedir}/build" includes="*.tgz"/>
   </delete>
  </target>
 
@@ -39,36 +36,7 @@
     <include name="**/*.php" />
     <modified />
    </fileset>
-<!--
-   <fileset dir="${basedir}/tests">
-    <include name="**/*.php" />
-    <modified />
-   </fileset>
--->
   </apply>
- </target>
-
- <target name="pear">
-  <mkdir dir="${basedir}/build/SebastianBergmann/HHVM"/>
-
-  <copy todir="${basedir}/build/SebastianBergmann/HHVM">
-   <fileset dir="${basedir}/src"/>
-  </copy>
-
-  <copy file="LICENSE" todir="${basedir}/build"/>
-  <copy file="README.md" todir="${basedir}/build"/>
-  <copy file="hhvm-wrapper.php" todir="${basedir}/build"/>
-  <copy file="ruleset.xml" todir="${basedir}/build"/>
-
-  <exec executable="pear" dir="${basedir}/build">
-   <arg value="package" />
-  </exec>
-
-  <delete dir="${basedir}/build/SebastianBergmann"/>
-  <delete file="${basedir}/build/LICENSE"/>
-  <delete file="${basedir}/build/README.md"/>
-  <delete file="${basedir}/build/hhvm-wrapper.php"/>
-  <delete file="${basedir}/build/ruleset.xml"/>
  </target>
 
  <target name="phar"
