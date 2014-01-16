@@ -93,6 +93,8 @@
    <arg value="${basedir}/hhvm-wrapper.php --version | awk 'BEGIN { ORS = &quot;&quot;; } {print $2}'" />
   </exec>
 
+  <copy file="${basedir}/ruleset.xml" todir="${basedir}/build/phar"/>
+
   <copy todir="${basedir}/build/phar/src">
    <fileset dir="${basedir}/src">
     <include name="**/*.php" />
