@@ -93,6 +93,11 @@ class Result
 
             foreach ($violations as $violation) {
                 $filename = $violation['c1'][0];
+
+                if (strpos($filename, 'systemlib.php') === 0) {
+                    continue;
+                }
+
                 $line     = $violation['c1'][1];
                 $message  = sprintf(
                               $this->rules[$rule],
