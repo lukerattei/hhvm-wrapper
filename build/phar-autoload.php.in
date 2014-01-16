@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-define('__HHVM_PHAR__', realpath($GLOBALS['_SERVER']['SCRIPT_NAME']));
+define('__HHVM_PHAR__', 'phar://___PHAR___');
 
 spl_autoload_register(
   function ($class)

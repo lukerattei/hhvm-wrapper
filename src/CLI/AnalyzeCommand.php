@@ -161,17 +161,11 @@ class AnalyzeCommand extends BaseCommand
     private function getDefaultRulesetFile()
     {
         if (defined('__HHVM_PHAR__')) {
-            return 'phar://' . basename(__HHVM_PHAR__) . '/ruleset.xml';
-        }
-
-        else if (strpos('@data_dir@', '@data_dir') === 0) {
-            return realpath(
-              dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'ruleset.xml'
-            );
+            return __HHVM_PHAR__ . '/ruleset.xml';
         }
 
         return realpath(
-          '@data_dir@' . DIRECTORY_SEPARATOR . 'hhvm-wrapper' . DIRECTORY_SEPARATOR . 'ruleset.xml'
+          dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'ruleset.xml'
         );
     }
 }
