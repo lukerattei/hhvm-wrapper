@@ -42,11 +42,7 @@
  * @since     File available since Release 1.0.0
  */
 
-if (strpos('@php_bin@', '@php_bin') === 0) {
-    require __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
-} else {
-    require 'SebastianBergmann/HHVM/autoload.php';
-}
+require __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 $application = new SebastianBergmann\HHVM\CLI\Application;
 $application->run();
