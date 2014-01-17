@@ -2,6 +2,8 @@
 
 **hhvm-wrapper** is a convenience wrapper for [HHVM](http://github.com/facebook/hhvm/).
 
+[![Latest Stable Version](https://poser.pugx.org/sebastian/hhvm-wrapper/v/stable.png)](https://packagist.org/packages/sebastian/hhvm-wrapper)
+
 ## Installation
 
 ### PHP Archive (PHAR)
