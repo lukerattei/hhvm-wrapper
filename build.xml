@@ -13,19 +13,16 @@
   </delete>
  </target>
 
- <target name="prepare" depends="clean,phpab" description="Prepare for build">
+ <target name="composer" description="Install dependencies with Composer">
+  <get src="https://getcomposer.org/composer.phar" dest="${basedir}/composer.phar"/>
+
+  <exec executable="php">
+   <arg value="composer.phar"/>
+   <arg value="install"/>
+  </exec>
  </target>
 
- <target name="phpab" description="Generate autoloader scripts">
-  <exec executable="phpab">
-   <arg value="--output" />
-   <arg path="src/autoload.php" />
-   <arg value="--template" />
-   <arg path="src/autoload.php.in" />
-   <arg value="--indent" />
-   <arg value="              " />
-   <arg path="src" />
-  </exec>
+ <target name="prepare" depends="clean,composer" description="Prepare for build">
  </target>
 
  <target name="lint">
@@ -41,24 +38,14 @@
 
  <target name="phar"
          description="Create PHAR archive of hhvm-wrapper and all its dependencies"
-         depends="phar-prepare,phar-build">
- </target>
-
- <target name="phar-prepare" depends="clean">
+         depends="clean,composer,phar-build">
   <mkdir dir="${basedir}/build/phar"/>
-
-  <get src="https://getcomposer.org/composer.phar" dest="${basedir}/composer.phar"/>
-
-  <exec executable="php">
-   <arg value="composer.phar"/>
-   <arg value="install"/>
-  </exec>
  </target>
 
  <target name="phar-build">
   <exec executable="bash" outputproperty="version">
    <arg value="-c" />
-   <arg value="${basedir}/hhvm-wrapper.php --version | awk 'BEGIN { ORS = &quot;&quot;; } {print $2}'" />
+   <arg value="${basedir}/hhvm-wrapper --version | awk 'BEGIN { ORS = &quot;&quot;; } {print $2}'" />
   </exec>
 
   <copy file="${basedir}/ruleset.xml" todir="${basedir}/build/phar"/>
@@ -66,7 +53,6 @@
   <copy todir="${basedir}/build/phar/src">
    <fileset dir="${basedir}/src">
     <include name="**/*.php" />
-    <exclude name="**/autoload.php" />
    </fileset>
   </copy>
 
