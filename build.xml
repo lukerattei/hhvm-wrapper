@@ -6,7 +6,6 @@
   <delete dir="${basedir}/bin"/>
   <delete dir="${basedir}/vendor"/>
   <delete file="${basedir}/composer.lock"/>
-  <delete file="${basedir}/composer.phar"/>
   <delete dir="${basedir}/build/phar"/>
   <delete>
    <fileset dir="${basedir}/build" includes="*.phar"/>
@@ -80,6 +79,8 @@
   <copy todir="${basedir}/build/phar/fdomdocument">
    <fileset dir="${basedir}/vendor/theseer/fdomdocument/src"/>
   </copy>
+
+  <exec executable="${basedir}/build/phar-manifest.php" output="${basedir}/build/phar/manifest.txt"/>
 
   <exec executable="phpab">
    <arg value="--all" />
