@@ -160,8 +160,8 @@ class AnalyzeCommand extends BaseCommand
 
     private function getDefaultRulesetFile()
     {
-        if (defined('__HHVM_PHAR__')) {
-            return __HHVM_PHAR__ . '/ruleset.xml';
+        if (defined('__HHVM_WRAPPER_PHAR_ROOT__')) {
+            return __HHVM_WRAPPER_PHAR_ROOT__ . '/ruleset.xml';
         }
 
         return realpath(
