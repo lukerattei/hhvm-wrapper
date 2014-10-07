@@ -1,5 +1,5 @@
 {
-    "name": "sebastian/hhvm-wrapper",
+    "name": "lukerattei/hhvm-wrapper",
     "description": "Convenience wrapper for HHVM",
     "homepage": "https://github.com/sebastianbergmann/hphpa",
     "license": "BSD-3-Clause",
