@@ -63,7 +63,7 @@ class Application extends AbstractApplication
 {
     public function __construct()
     {
-        $version = new Version('2.0.3', dirname(dirname(__DIR__)));
+        $version = new Version('2.0.4', dirname(dirname(__DIR__)));
         parent::__construct('hhvm-wrapper', $version->getVersion());
 
         $this->add(new AnalyzeCommand);
