@@ -82,13 +82,20 @@ class AnalyzeCommand extends BaseCommand
                  NULL,
                  InputOption::VALUE_REQUIRED,
                  'Write report in Checkstyle XML format to file'
+               )
+             ->addOption(
+                 'ignore-files',
+                 NULL,
+                 InputOption::VALUE_REQUIRED,
+                 'Ignore violations in files matching a regex'
                );
     }
 
     protected function doExecute(InputInterface $input, OutputInterface $output, array $files, $quiet)
     {
-        $checkstyle  = $input->getOption('checkstyle');
-        $rulesetFile = $input->getOption('ruleset');
+        $checkstyle       = $input->getOption('checkstyle');
+        $rulesetFile      = $input->getOption('ruleset');
+        $ignoreFilesRegex = $input->getOption('ignore-files');
 
         if (!$rulesetFile) {
             $rulesetFile = $this->getDefaultRulesetFile();
@@ -109,6 +116,7 @@ class AnalyzeCommand extends BaseCommand
         $analyzer = new Analyzer;
         $result   = new Result;
         $result->setRules($rules);
+        $result->setIgnoreFilesRegex($ignoreFilesRegex);
 
         try {
             $analyzer->run($files, $result);

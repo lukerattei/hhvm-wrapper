@@ -60,6 +60,11 @@ class Result
     protected $rules = array();
 
     /**
+     * @var string
+     */
+    protected $ignoreFilesRegex = '';
+
+    /**
      * @var array
      */
     protected $violations = array();
@@ -82,6 +87,15 @@ class Result
     }
 
     /**
+     * @param string $regex
+     */
+    public function setIgnoreFilesRegex($regex) {
+        if (strlen($regex)) {
+            $this->ignoreFilesRegex = '/' . str_replace('/', '\/', $regex) . '/';
+        }
+    }
+
+    /**
      * @param array $codeError
      */
     public function parse(array $codeError)
@@ -96,6 +110,12 @@ class Result
 
                 if (strpos($filename, 'systemlib.php') === 0) {
                     continue;
+                }
+
+                if ($this->ignoreFilesRegex) {
+                    if (preg_match($this->ignoreFilesRegex, $filename)) {
+                        continue;
+                    }
                 }
 
                 $line     = $violation['c1'][1];
